@@ -1,8 +1,8 @@
 /* ----------------------------------------
 Code exported from SAS Enterprise Guide
-DATE: Monday, January 12, 2015     TIME: 9:41:00 AM
-PROJECT: mihaljevichs_SAS_project_010915
-PROJECT PATH: P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp
+DATE: Monday, January 12, 2015     TIME: 9:54:52 AM
+PROJECT: mihaljevichs_SAS_project_011215
+PROJECT PATH: P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp
 ---------------------------------------- */
 
 /* Library assignment for Local.SEAN */
@@ -212,6 +212,32 @@ Libname SEAN V9 'P:\QAC\qac200\students\smihaljevich\Assignments' ;
   %end;
 %mend;
 
+/* save the current settings of XPIXELS and YPIXELS */
+/* so that they can be restored later               */
+%macro _sas_pushchartsize(new_xsize, new_ysize);
+	%global _savedxpixels _savedypixels;
+	options nonotes;
+	proc sql noprint;
+	select setting into :_savedxpixels
+	from sashelp.vgopt
+	where optname eq "XPIXELS";
+	select setting into :_savedypixels
+	from sashelp.vgopt
+	where optname eq "YPIXELS";
+	quit;
+	options notes;
+	GOPTIONS XPIXELS=&new_xsize YPIXELS=&new_ysize;
+%mend;
+
+/* restore the previous values for XPIXELS and YPIXELS */
+%macro _sas_popchartsize;
+	%if %symexist(_savedxpixels) %then %do;
+		GOPTIONS XPIXELS=&_savedxpixels YPIXELS=&_savedypixels;
+		%symdel _savedxpixels / nowarn;
+		%symdel _savedypixels / nowarn;
+	%end;
+%mend;
+
 /* ---------------------------------- */
 /* MACRO: enterpriseguide             */
 /* PURPOSE: define a macro variable   */
@@ -268,32 +294,6 @@ Libname SEAN V9 'P:\QAC\qac200\students\smihaljevich\Assignments' ;
 
 %enterpriseguide
 
-/* save the current settings of XPIXELS and YPIXELS */
-/* so that they can be restored later               */
-%macro _sas_pushchartsize(new_xsize, new_ysize);
-	%global _savedxpixels _savedypixels;
-	options nonotes;
-	proc sql noprint;
-	select setting into :_savedxpixels
-	from sashelp.vgopt
-	where optname eq "XPIXELS";
-	select setting into :_savedypixels
-	from sashelp.vgopt
-	where optname eq "YPIXELS";
-	quit;
-	options notes;
-	GOPTIONS XPIXELS=&new_xsize YPIXELS=&new_ysize;
-%mend;
-
-/* restore the previous values for XPIXELS and YPIXELS */
-%macro _sas_popchartsize;
-	%if %symexist(_savedxpixels) %then %do;
-		GOPTIONS XPIXELS=&_savedxpixels YPIXELS=&_savedypixels;
-		%symdel _savedxpixels / nowarn;
-		%symdel _savedypixels / nowarn;
-	%end;
-%mend;
-
 ODS PROCTITLE;
 OPTIONS DEV=ACTIVEX;
 GOPTIONS XPIXELS=0 YPIXELS=0;
@@ -310,8 +310,8 @@ ODS tagsets.sasreport13(ID=EGSRX) FILE=EGSRX
 
 /*   START OF NODE: Assign Project Library (SEAN)   */
 %LET _CLIENTTASKLABEL='Assign Project Library (SEAN)';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011215.egp';
 
 GOPTIONS ACCESSIBLE;
 LIBNAME SEAN  "P:\QAC\qac200\students\smihaljevich\Assignments" ;
@@ -324,8 +324,8 @@ GOPTIONS NOACCESSIBLE;
 
 /*   START OF NODE: Subset of Relevant Variables Age 18 and older   */
 %LET _CLIENTTASKLABEL='Subset of Relevant Variables Age 18 and older';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011215.egp';
 
 GOPTIONS ACCESSIBLE;
 %_eg_conditional_dropds(SEAN.MEPS_FULLYR_2012_SUBSET);
@@ -521,7 +521,8 @@ PROC SQL;
           t1.IPDIS12, 
           t1.IPNGTD12, 
           t1.RXTOT12, 
-          t1.PERWT12F
+          t1.PERWT12F, 
+          t1.EDRECODE
       FROM EC100002.meps_fullyr_2012 t1
       WHERE t1.AGE12X >= 18
       ORDER BY t1.DUPERSID;
@@ -536,8 +537,8 @@ GOPTIONS NOACCESSIBLE;
 /*   START OF NODE: SAS program code 1   */
 %LET SYSLAST=SEAN.MEPS_FULLYR_2012_SUBSET;
 %LET _CLIENTTASKLABEL='SAS program code 1';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011215.egp';
 %LET _SASPROGRAMFILE='P:\QAC\qac200\students\smihaljevich\SAS code\SAS program code 1.sas';
 
 GOPTIONS ACCESSIBLE;
@@ -574,14 +575,14 @@ GOPTIONS NOACCESSIBLE;
 
 /*   START OF NODE: One-Way Frequencies for all variables in subset of relevant variables   */
 %LET _CLIENTTASKLABEL='One-Way Frequencies for all variables in subset of relevant variables';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011215.egp';
 
 GOPTIONS ACCESSIBLE;
 /* -------------------------------------------------------------------
    Code generated by SAS Task
 
-   Generated on: Monday, January 12, 2015 at 9:40:14 AM
+   Generated on: Monday, January 12, 2015 at 9:48:33 AM
    By task: One-Way Frequencies for all variables in subset of relevant variables
 
    Input Data: Local:SEAN.MEPS_FULLYR_2012_SUBSET
@@ -604,7 +605,7 @@ PROC SQL;
 		     , T.TRIEX12X, T.TRILI12X, T.TRICH12X, T.MCRPD12, T.MCRPD12X, T.MCRPB12, T.MCRPHO12, T.MCDHMO12, T.MCDMC12, T.PRVHMO12, T.PRVMNC12, T.PRVDRL12, T.PHMONP12, T.PMNCNP12, T.PRDRNP12, T.TRICR12X, T.TRIAT12X, T.MCAID12, T.MCAID12X
 		     , T.MCARE12, T.MCARE12X, T.MCDAT12X, T.OTPAAT12, T.OTPBAT12, T.OTPUBA12, T.OTPUBB12, T.PRIDK12, T.PRIEU12, T.PRING12, T.PRIOG12, T.PRIS12, T.PRIV12, T.PRIVAT12, T.PROUT12, T.PUB12X, T.PUBAT12X, T.INS12X, T.INSAT12X, T.STAPR12
 		     , T.STPRAT12, T.DNTINS12, T.PMDINS12, T.PMEDUP31, T.PMEDUP42, T.PMEDUP53, T.PMEDPY31, T.PMEDPY42, T.PMEDPY53, T.PMEDPP31, T.PMEDPP42, T.PMEDPP53, T.TOTTCH12, T.TOTEXP12, T.TOTSLF12, T.TOTMCR12, T.TOTMCD12, T.TOTPRV12, T.TOTVA12
-		     , T.TOTTRI12, T.TOTOFD12, T.TOTSTL12, T.TOTWCP12, T.TOTOPR12, T.TOTOPU12, T.TOTOSR12, T.TOTPTR12, T.TOTOTH12, T.ERTOT12, T.IPZERO12, T.IPDIS12, T.IPNGTD12, T.RXTOT12, T.PERWT12F
+		     , T.TOTTRI12, T.TOTOFD12, T.TOTSTL12, T.TOTWCP12, T.TOTOPR12, T.TOTOPU12, T.TOTOSR12, T.TOTPTR12, T.TOTOTH12, T.ERTOT12, T.IPZERO12, T.IPDIS12, T.IPNGTD12, T.RXTOT12, T.PERWT12F, T.EDRECODE
 	FROM SEAN.MEPS_FULLYR_2012_SUBSET(FIRSTOBS=1 ) as T
 ;
 QUIT;
@@ -806,6 +807,7 @@ PROC FREQ DATA=WORK.SORT
 	TABLES IPNGTD12 / MISSPRINT  SCORES=TABLE;
 	TABLES RXTOT12 / MISSPRINT  SCORES=TABLE;
 	TABLES PERWT12F / MISSPRINT  SCORES=TABLE;
+	TABLES EDRECODE / MISSPRINT  SCORES=TABLE;
 RUN;
 /* -------------------------------------------------------------------
    End of task code.
@@ -823,14 +825,14 @@ GOPTIONS NOACCESSIBLE;
 
 /*   START OF NODE: Recode of variables for missing data codes   */
 %LET _CLIENTTASKLABEL='Recode of variables for missing data codes';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011215.egp';
 
 GOPTIONS ACCESSIBLE;
 %_eg_conditional_dropds(WORK.QUERY_MEPS_FULLYR_2012_MANAGED);
 
 PROC SQL;
-   CREATE TABLE WORK."QUERY_MEPS_FULLYR_2012_MANAGED"n AS 
+   CREATE TABLE WORK.QUERY_MEPS_FULLYR_2012_MANAGED(label="QUERY_MEPS_FULLYR_2012_MANAGED") AS 
    SELECT t1.DUPERSID, 
           t1.AGE12X, 
           t1.SEX, 
@@ -1021,6 +1023,7 @@ PROC SQL;
           t1.IPNGTD12, 
           t1.RXTOT12, 
           t1.PERWT12F, 
+          t1.EDRECODE, 
           /* HEALTH_GENERAL */
             (CASE 
                WHEN -1 = t1.ADGENH42 THEN .
@@ -1282,7 +1285,14 @@ PROC SQL;
                WHEN -8 = t1.YNOUSC42 THEN .
                WHEN -9 = t1.YNOUSC42 THEN .
                ELSE t1.YNOUSC42
-            END) LABEL="Main reason person does not have USC (recoded missing)" AS WHY_NO_USC
+            END) LABEL="Main reason person does not have USC (recoded missing)" AS WHY_NO_USC, 
+          /* EDRECODE_RECODED */
+            (CASE 
+               WHEN -7 = t1.EDRECODE THEN .
+               WHEN -8 = t1.EDRECODE THEN .
+               WHEN -9 = t1.EDRECODE THEN .
+               ELSE t1.EDRECODE
+            END) LABEL="Recoded missing values for EDRECODE" AS EDRECODE_RECODED
       FROM SEAN.MEPS_FULLYR_2012_SUBSET t1;
 QUIT;
 
@@ -1294,17 +1304,17 @@ GOPTIONS NOACCESSIBLE;
 %LET _CLIENTPROJECTNAME=;
 
 
-/*   START OF NODE: Table Analysis   */
-%LET _CLIENTTASKLABEL='Table Analysis';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
+/*   START OF NODE: Table Analysis39   */
+%LET _CLIENTTASKLABEL='Table Analysis39';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011215.egp';
 
 GOPTIONS ACCESSIBLE;
 /* -------------------------------------------------------------------
    Code generated by SAS Task
 
-   Generated on: Monday, January 12, 2015 at 9:40:15 AM
-   By task: Table Analysis
+   Generated on: Monday, January 12, 2015 at 9:48:34 AM
+   By task: Table Analysis39
 
    Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
    Server:  Local
@@ -1317,7 +1327,20 @@ GOPTIONS ACCESSIBLE;
 
 PROC SQL;
 	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.HEALTH_GENERAL, T.ADGENH42
+		SELECT T.AGE12X, T.SEX, T.REGION12, T.RACETHX, T.MARRY12X, T.EDUCYR, T.EDUYRDEG, T.EMPST31, T.EMPST42, T.EMPST53, T.SAQELIG, T.ADPRX42, T.ADILCR42, T.ADILWW42, T.ADRTCR42, T.ADRTWW42, T.ADAPPT42, T.ADNDCR42, T.ADEGMC42, T.ADLIST42
+		     , T.ADEXPL42, T.ADRESP42, T.ADPRTM42, T.ADINST42, T.ADEZUN42, T.ADTLHW42, T.ADFFRM42, T.ADFHLP42, T.ADHECR42, T.ADSMOK42, T.ADNSMK42, T.ADDRBP42, T.ADSPEC42, T.ADSPRF42, T.ADGENH42, T.ADDAYA42, T.ADCLIM42, T.ADPALS42, T.ADPWLM42
+		     , T.ADMALS42, T.ADMWLM42, T.ADPAIN42, T.ADCAPE42, T.ADNRGY42, T.ADDOWN42, T.ADSOCA42, T.PCS42, T.MCS42, T.SFFLAG42, T.ADNERV42, T.ADHOPE42, T.ADREST42, T.ADSAD42, T.ADEFRT42, T.ADWRTH42, T.K6SUM42, T.ADINTR42, T.ADDPRS42
+		     , T.PHQ242, T.ADINSA42, T.ADINSB42, T.ADRISK42, T.ADOVER42, T.ADCMPM42, T.ADCMPD42, T.ADCMPY42, T.ADLANG42, T.SAQWT12F, T.FAMS1231, T.PROXY12, T.INTVLANG, T.ELGRND12, T.RTHLTH31, T.RTHLTH42, T.RTHLTH53, T.MNHLTH31, T.MNHLTH42
+		     , T.MNHLTH53, T.HIBPDX, T.CHDDX, T.ANGIDX, T.MIDX, T.OHRTDX, T.STRKDX, T.EMPHDX, T.CHOLDX, T.CANCERDX, T.DIABDX, T.ARTHDX, T.ASTHDX, T.PREGNT31, T.PREGNT42, T.PREGNT53, T.BMINDX53, T.LANGHM42, T.ENGCMF42, T.ENGSPK42, T.USBORN42
+		     , T.USLIVE42, T.HAVEUS42, T.YNOUSC42, T.PROVTY42, T.PLCTYP42, T.TYPEPE42, T.LANGPR42, T.MDUNAB42, T.DPOTSD12, T.TTLP12X, T.FAMINC12, T.POVCAT12, T.POVLEV12, T.UNINS12, T.INSCOV12, T.INSURC12, T.TRIST12X, T.TRIPR12X
+		     , T.TRIEX12X, T.TRILI12X, T.TRICH12X, T.MCRPD12, T.MCRPD12X, T.MCRPB12, T.MCRPHO12, T.MCDHMO12, T.MCDMC12, T.PRVHMO12, T.PRVMNC12, T.PRVDRL12, T.PHMONP12, T.PMNCNP12, T.PRDRNP12, T.TRICR12X, T.TRIAT12X, T.MCAID12, T.MCAID12X
+		     , T.MCARE12, T.MCARE12X, T.MCDAT12X, T.OTPAAT12, T.OTPBAT12, T.OTPUBA12, T.OTPUBB12, T.PRIDK12, T.PRIEU12, T.PRING12, T.PRIOG12, T.PRIS12, T.PRIV12, T.PRIVAT12, T.PROUT12, T.PUB12X, T.PUBAT12X, T.INS12X, T.INSAT12X, T.STAPR12
+		     , T.STPRAT12, T.DNTINS12, T.PMDINS12, T.PMEDUP31, T.PMEDUP42, T.PMEDUP53, T.PMEDPY31, T.PMEDPY42, T.PMEDPY53, T.PMEDPP31, T.PMEDPP42, T.PMEDPP53, T.TOTTCH12, T.TOTEXP12, T.TOTSLF12, T.TOTMCR12, T.TOTMCD12, T.TOTPRV12, T.TOTVA12
+		     , T.TOTTRI12, T.TOTOFD12, T.TOTSTL12, T.TOTWCP12, T.TOTOPR12, T.TOTOPU12, T.TOTOSR12, T.TOTPTR12, T.TOTOTH12, T.ERTOT12, T.IPZERO12, T.IPDIS12, T.IPNGTD12, T.RXTOT12, T.PERWT12F, T.HEALTH_GENERAL, T.HEALTH_LIMITS_ACTIVITY
+		     , T.HEALTH_LIMITS_STAIRS, T.ACCOMPLISH_PHYSICAL_PROBLEMS, T.WORK_LIMIT_PHYSICAL_PROBLEMS, T.ACCOMPLISH_MENTAL_PROBLEMS, T.WORK_LIMIT_MENTAL_PROBLEMS, T.PAIN_LIMIT_WORK, T.CALM, T.ENERGY, T.DEPRESSED, T.HEALTH_SOCIAL
+		     , T.EDUCYR_RECODED, T.EDUYRDEG_RECODED, T.MARITAL_STATUS, T.EMPLOY_STATUS_31, T.EMPLOY_STATUS_42, T.EMPLOY_STATUS_53, T.NOT_NEED_H_INSURANCE, T.HEALTH_WORTH_COST, T.LIKELY_RISK, T.ILLS_NO_HELP, T.SAQINTERVIEW_LANG, T.SPEC_REFERRAL
+		     , T.SEE_SPECIALIST, T.CHECK_BLOOD_PRESSURE, T.SMOKE, T.RATE_HEALTH_CARE, T.PERC_HEALTH_31, T.PERC_HEALTH_42, T.PERC_HEALTH_53, T.BMINDX_RECODED, T.ENGSPK_RECODED, T.PLCTYP_RECODED, T.TYPEPE_RECODED, T.PROVIDER_TYPE, T.HAVE_USC
+		     , T.WHY_NO_USC, T.EDRECODE_RECODED, T.EDRECODE
 	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
 ;
 QUIT;
@@ -1337,55 +1360,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis1   */
-%LET _CLIENTTASKLABEL='Table Analysis1';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:15 AM
-   By task: Table Analysis1
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.HEALTH_LIMITS_ACTIVITY, T.ADDAYA42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADDAYA42 * HEALTH_LIMITS_ACTIVITY /
 		NOROW
 		NOCOL
@@ -1394,55 +1368,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis2   */
-%LET _CLIENTTASKLABEL='Table Analysis2';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:15 AM
-   By task: Table Analysis2
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.HEALTH_LIMITS_STAIRS, T.ADCLIM42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADCLIM42 * HEALTH_LIMITS_STAIRS /
 		NOROW
 		NOCOL
@@ -1451,169 +1376,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis3   */
-%LET _CLIENTTASKLABEL='Table Analysis3';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:15 AM
-   By task: Table Analysis3
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.ACCOMPLISH_PHYSICAL_PROBLEMS, T.ADPALS42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
-	TABLES ADPALS42 * ACCOMPLISH_PHYSICAL_PROBLEMS /
-		NOROW
-		NOCOL
-		NOPERCENT
-		MISSPRINT
-		NOCUM
-		SCORES=TABLE
-		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis4   */
-%LET _CLIENTTASKLABEL='Table Analysis4';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:15 AM
-   By task: Table Analysis4
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.WORK_LIMIT_PHYSICAL_PROBLEMS, T.ADPWLM42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
-	TABLES ADPWLM42 * WORK_LIMIT_PHYSICAL_PROBLEMS /
-		NOROW
-		NOCOL
-		NOPERCENT
-		MISSPRINT
-		NOCUM
-		SCORES=TABLE
-		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis5   */
-%LET _CLIENTTASKLABEL='Table Analysis5';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:15 AM
-   By task: Table Analysis5
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.ACCOMPLISH_MENTAL_PROBLEMS, T.ADMALS42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADMALS42 * ACCOMPLISH_MENTAL_PROBLEMS /
 		NOROW
 		NOCOL
@@ -1622,55 +1384,14 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis6   */
-%LET _CLIENTTASKLABEL='Table Analysis6';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:16 AM
-   By task: Table Analysis6
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.WORK_LIMIT_MENTAL_PROBLEMS, T.ADMWLM42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
+	TABLES ADPWLM42 * WORK_LIMIT_PHYSICAL_PROBLEMS /
+		NOROW
+		NOCOL
+		NOPERCENT
+		MISSPRINT
+		NOCUM
+		SCORES=TABLE
+		ALPHA=0.05;
 	TABLES ADMWLM42 * WORK_LIMIT_MENTAL_PROBLEMS /
 		NOROW
 		NOCOL
@@ -1679,55 +1400,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis7   */
-%LET _CLIENTTASKLABEL='Table Analysis7';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:16 AM
-   By task: Table Analysis7
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.PAIN_LIMIT_WORK, T.ADPAIN42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADPAIN42 * PAIN_LIMIT_WORK /
 		NOROW
 		NOCOL
@@ -1736,55 +1408,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis8   */
-%LET _CLIENTTASKLABEL='Table Analysis8';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:16 AM
-   By task: Table Analysis8
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.CALM, T.ADCAPE42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADCAPE42 * CALM /
 		NOROW
 		NOCOL
@@ -1793,55 +1416,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis9   */
-%LET _CLIENTTASKLABEL='Table Analysis9';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:16 AM
-   By task: Table Analysis9
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.ENERGY, T.ADNRGY42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADNRGY42 * ENERGY /
 		NOROW
 		NOCOL
@@ -1850,55 +1424,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis10   */
-%LET _CLIENTTASKLABEL='Table Analysis10';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:16 AM
-   By task: Table Analysis10
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.DEPRESSED, T.ADDOWN42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADDOWN42 * DEPRESSED /
 		NOROW
 		NOCOL
@@ -1907,55 +1432,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis11   */
-%LET _CLIENTTASKLABEL='Table Analysis11';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:16 AM
-   By task: Table Analysis11
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.HEALTH_SOCIAL, T.ADSOCA42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADSOCA42 * HEALTH_SOCIAL /
 		NOROW
 		NOCOL
@@ -1964,55 +1440,14 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis12   */
-%LET _CLIENTTASKLABEL='Table Analysis12';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:17 AM
-   By task: Table Analysis12
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.MARITAL_STATUS, T.MARRY12X
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
+	TABLES ADPALS42 * ACCOMPLISH_PHYSICAL_PROBLEMS /
+		NOROW
+		NOCOL
+		NOPERCENT
+		MISSPRINT
+		NOCUM
+		SCORES=TABLE
+		ALPHA=0.05;
 	TABLES MARRY12X * MARITAL_STATUS /
 		NOROW
 		NOCOL
@@ -2021,55 +1456,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis13   */
-%LET _CLIENTTASKLABEL='Table Analysis13';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:17 AM
-   By task: Table Analysis13
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.EDUCYR_RECODED, T.EDUCYR
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES EDUCYR * EDUCYR_RECODED /
 		NOROW
 		NOCOL
@@ -2078,55 +1464,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis14   */
-%LET _CLIENTTASKLABEL='Table Analysis14';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:17 AM
-   By task: Table Analysis14
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.EDUYRDEG_RECODED, T.EDUYRDEG
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES EDUYRDEG * EDUYRDEG_RECODED /
 		NOROW
 		NOCOL
@@ -2135,55 +1472,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis15   */
-%LET _CLIENTTASKLABEL='Table Analysis15';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:17 AM
-   By task: Table Analysis15
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.EMPLOY_STATUS_31, T.EMPST31
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES EMPST31 * EMPLOY_STATUS_31 /
 		NOROW
 		NOCOL
@@ -2192,55 +1480,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis16   */
-%LET _CLIENTTASKLABEL='Table Analysis16';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:17 AM
-   By task: Table Analysis16
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.EMPLOY_STATUS_42, T.EMPST42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES EMPST42 * EMPLOY_STATUS_42 /
 		NOROW
 		NOCOL
@@ -2249,55 +1488,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis17   */
-%LET _CLIENTTASKLABEL='Table Analysis17';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:17 AM
-   By task: Table Analysis17
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.EMPLOY_STATUS_53, T.EMPST53
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES EMPST53 * EMPLOY_STATUS_53 /
 		NOROW
 		NOCOL
@@ -2306,55 +1496,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis18   */
-%LET _CLIENTTASKLABEL='Table Analysis18';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:17 AM
-   By task: Table Analysis18
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.NOT_NEED_H_INSURANCE, T.ADINSA42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADINSA42 * NOT_NEED_H_INSURANCE /
 		NOROW
 		NOCOL
@@ -2363,55 +1504,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis19   */
-%LET _CLIENTTASKLABEL='Table Analysis19';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:18 AM
-   By task: Table Analysis19
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.HEALTH_WORTH_COST, T.ADINSB42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADINSB42 * HEALTH_WORTH_COST /
 		NOROW
 		NOCOL
@@ -2420,55 +1512,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis20   */
-%LET _CLIENTTASKLABEL='Table Analysis20';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:18 AM
-   By task: Table Analysis20
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.LIKELY_RISK, T.ADRISK42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADRISK42 * LIKELY_RISK /
 		NOROW
 		NOCOL
@@ -2477,55 +1520,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis21   */
-%LET _CLIENTTASKLABEL='Table Analysis21';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:18 AM
-   By task: Table Analysis21
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.ILLS_NO_HELP, T.ADOVER42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADOVER42 * ILLS_NO_HELP /
 		NOROW
 		NOCOL
@@ -2534,55 +1528,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis22   */
-%LET _CLIENTTASKLABEL='Table Analysis22';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:18 AM
-   By task: Table Analysis22
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.SAQINTERVIEW_LANG, T.ADLANG42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADLANG42 * SAQINTERVIEW_LANG /
 		NOROW
 		NOCOL
@@ -2591,55 +1536,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis23   */
-%LET _CLIENTTASKLABEL='Table Analysis23';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:18 AM
-   By task: Table Analysis23
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.SPEC_REFERRAL, T.ADSPRF42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADSPRF42 * SPEC_REFERRAL /
 		NOROW
 		NOCOL
@@ -2648,55 +1544,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis24   */
-%LET _CLIENTTASKLABEL='Table Analysis24';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:18 AM
-   By task: Table Analysis24
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.SEE_SPECIALIST, T.ADSPEC42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADSPEC42 * SEE_SPECIALIST /
 		NOROW
 		NOCOL
@@ -2705,55 +1552,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis25   */
-%LET _CLIENTTASKLABEL='Table Analysis25';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:19 AM
-   By task: Table Analysis25
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.CHECK_BLOOD_PRESSURE, T.ADDRBP42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADDRBP42 * CHECK_BLOOD_PRESSURE /
 		NOROW
 		NOCOL
@@ -2762,55 +1560,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis26   */
-%LET _CLIENTTASKLABEL='Table Analysis26';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:19 AM
-   By task: Table Analysis26
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.SMOKE, T.ADSMOK42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADSMOK42 * SMOKE /
 		NOROW
 		NOCOL
@@ -2819,55 +1568,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis27   */
-%LET _CLIENTTASKLABEL='Table Analysis27';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:19 AM
-   By task: Table Analysis27
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.RATE_HEALTH_CARE, T.ADHECR42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ADHECR42 * RATE_HEALTH_CARE /
 		NOROW
 		NOCOL
@@ -2876,55 +1576,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis28   */
-%LET _CLIENTTASKLABEL='Table Analysis28';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:19 AM
-   By task: Table Analysis28
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.PERC_HEALTH_31, T.RTHLTH31
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES RTHLTH31 * PERC_HEALTH_31 /
 		NOROW
 		NOCOL
@@ -2933,55 +1584,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis29   */
-%LET _CLIENTTASKLABEL='Table Analysis29';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:19 AM
-   By task: Table Analysis29
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.PERC_HEALTH_42, T.RTHLTH42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES RTHLTH42 * PERC_HEALTH_42 /
 		NOROW
 		NOCOL
@@ -2990,55 +1592,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis30   */
-%LET _CLIENTTASKLABEL='Table Analysis30';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:19 AM
-   By task: Table Analysis30
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.PERC_HEALTH_53, T.RTHLTH53
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES RTHLTH53 * PERC_HEALTH_53 /
 		NOROW
 		NOCOL
@@ -3047,55 +1600,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis31   */
-%LET _CLIENTTASKLABEL='Table Analysis31';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:20 AM
-   By task: Table Analysis31
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.BMINDX_RECODED, T.BMINDX53
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES BMINDX53 * BMINDX_RECODED /
 		NOROW
 		NOCOL
@@ -3104,55 +1608,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis32   */
-%LET _CLIENTTASKLABEL='Table Analysis32';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:20 AM
-   By task: Table Analysis32
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.ENGSPK_RECODED, T.ENGSPK42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES ENGSPK42 * ENGSPK_RECODED /
 		NOROW
 		NOCOL
@@ -3161,55 +1616,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis33   */
-%LET _CLIENTTASKLABEL='Table Analysis33';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:20 AM
-   By task: Table Analysis33
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.PLCTYP_RECODED, T.PLCTYP42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES PLCTYP42 * PLCTYP_RECODED /
 		NOROW
 		NOCOL
@@ -3218,55 +1624,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis34   */
-%LET _CLIENTTASKLABEL='Table Analysis34';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:20 AM
-   By task: Table Analysis34
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.TYPEPE_RECODED, T.TYPEPE42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES TYPEPE42 * TYPEPE_RECODED /
 		NOROW
 		NOCOL
@@ -3275,55 +1632,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis35   */
-%LET _CLIENTTASKLABEL='Table Analysis35';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:20 AM
-   By task: Table Analysis35
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.PROVIDER_TYPE, T.PROVTY42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES PROVTY42 * PROVIDER_TYPE /
 		NOROW
 		NOCOL
@@ -3332,55 +1640,6 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Table Analysis36   */
-%LET _CLIENTTASKLABEL='Table Analysis36';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Monday, January 12, 2015 at 9:40:20 AM
-   By task: Table Analysis36
-
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.HAVE_USC, T.HAVEUS42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
-;
-QUIT;
-TITLE;
-TITLE1 "Table Analysis";
-TITLE2 "Results";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA = WORK.SORTTempTableSorted
-	ORDER=INTERNAL
-;
 	TABLES HAVEUS42 * HAVE_USC /
 		NOROW
 		NOCOL
@@ -3389,6 +1648,22 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
 		NOCUM
 		SCORES=TABLE
 		ALPHA=0.05;
+	TABLES YNOUSC42 * WHY_NO_USC /
+		NOROW
+		NOCOL
+		NOPERCENT
+		MISSPRINT
+		NOCUM
+		SCORES=TABLE
+		ALPHA=0.05;
+	TABLES EDRECODE * EDRECODE_RECODED /
+		NOROW
+		NOCOL
+		NOPERCENT
+		MISSPRINT
+		NOCUM
+		SCORES=TABLE
+		ALPHA=0.05;
 /* -------------------------------------------------------------------
    End of task code.
    ------------------------------------------------------------------- */
@@ -3403,31 +1678,304 @@ GOPTIONS NOACCESSIBLE;
 %LET _CLIENTPROJECTNAME=;
 
 
-/*   START OF NODE: Table Analysis37   */
-%LET _CLIENTTASKLABEL='Table Analysis37';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
+/*   START OF NODE: Reverse code certain variables   */
+%LET _CLIENTTASKLABEL='Reverse code certain variables';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011215.egp';
+
+GOPTIONS ACCESSIBLE;
+%_eg_conditional_dropds(WORK.SUBSET_RECODED_REVERSED);
+
+PROC SQL;
+   CREATE TABLE WORK.SUBSET_RECODED_REVERSED(label="SUBSET_RECODED_REVERSED") AS 
+   SELECT t1.DUPERSID, 
+          t1.AGE12X, 
+          t1.SEX, 
+          t1.REGION12, 
+          t1.RACETHX, 
+          t1.MARRY12X, 
+          t1.EDUCYR, 
+          t1.EDUYRDEG, 
+          t1.EMPST31, 
+          t1.EMPST42, 
+          t1.EMPST53, 
+          t1.SAQELIG, 
+          t1.ADPRX42, 
+          t1.ADILCR42, 
+          t1.ADILWW42, 
+          t1.ADRTCR42, 
+          t1.ADRTWW42, 
+          t1.ADAPPT42, 
+          t1.ADNDCR42, 
+          t1.ADEGMC42, 
+          t1.ADLIST42, 
+          t1.ADEXPL42, 
+          t1.ADRESP42, 
+          t1.ADPRTM42, 
+          t1.ADINST42, 
+          t1.ADEZUN42, 
+          t1.ADTLHW42, 
+          t1.ADFFRM42, 
+          t1.ADFHLP42, 
+          t1.ADHECR42, 
+          t1.ADSMOK42, 
+          t1.ADNSMK42, 
+          t1.ADDRBP42, 
+          t1.ADSPEC42, 
+          t1.ADSPRF42, 
+          t1.ADGENH42, 
+          t1.ADDAYA42, 
+          t1.ADCLIM42, 
+          t1.ADPALS42, 
+          t1.ADPWLM42, 
+          t1.ADMALS42, 
+          t1.ADMWLM42, 
+          t1.ADPAIN42, 
+          t1.ADCAPE42, 
+          t1.ADNRGY42, 
+          t1.ADDOWN42, 
+          t1.ADSOCA42, 
+          t1.PCS42, 
+          t1.MCS42, 
+          t1.SFFLAG42, 
+          t1.ADNERV42, 
+          t1.ADHOPE42, 
+          t1.ADREST42, 
+          t1.ADSAD42, 
+          t1.ADEFRT42, 
+          t1.ADWRTH42, 
+          t1.K6SUM42, 
+          t1.ADINTR42, 
+          t1.ADDPRS42, 
+          t1.PHQ242, 
+          t1.ADINSA42, 
+          t1.ADINSB42, 
+          t1.ADRISK42, 
+          t1.ADOVER42, 
+          t1.ADCMPM42, 
+          t1.ADCMPD42, 
+          t1.ADCMPY42, 
+          t1.ADLANG42, 
+          t1.SAQWT12F, 
+          t1.FAMS1231, 
+          t1.PROXY12, 
+          t1.INTVLANG, 
+          t1.ELGRND12, 
+          t1.RTHLTH31, 
+          t1.RTHLTH42, 
+          t1.RTHLTH53, 
+          t1.MNHLTH31, 
+          t1.MNHLTH42, 
+          t1.MNHLTH53, 
+          t1.HIBPDX, 
+          t1.CHDDX, 
+          t1.ANGIDX, 
+          t1.MIDX, 
+          t1.OHRTDX, 
+          t1.STRKDX, 
+          t1.EMPHDX, 
+          t1.CHOLDX, 
+          t1.CANCERDX, 
+          t1.DIABDX, 
+          t1.ARTHDX, 
+          t1.ASTHDX, 
+          t1.PREGNT31, 
+          t1.PREGNT42, 
+          t1.PREGNT53, 
+          t1.BMINDX53, 
+          t1.LANGHM42, 
+          t1.ENGCMF42, 
+          t1.ENGSPK42, 
+          t1.USBORN42, 
+          t1.USLIVE42, 
+          t1.HAVEUS42, 
+          t1.YNOUSC42, 
+          t1.PROVTY42, 
+          t1.PLCTYP42, 
+          t1.TYPEPE42, 
+          t1.LANGPR42, 
+          t1.MDUNAB42, 
+          t1.DPOTSD12, 
+          t1.TTLP12X, 
+          t1.FAMINC12, 
+          t1.POVCAT12, 
+          t1.POVLEV12, 
+          t1.UNINS12, 
+          t1.INSCOV12, 
+          t1.INSURC12, 
+          t1.TRIST12X, 
+          t1.TRIPR12X, 
+          t1.TRIEX12X, 
+          t1.TRILI12X, 
+          t1.TRICH12X, 
+          t1.MCRPD12, 
+          t1.MCRPD12X, 
+          t1.MCRPB12, 
+          t1.MCRPHO12, 
+          t1.MCDHMO12, 
+          t1.MCDMC12, 
+          t1.PRVHMO12, 
+          t1.PRVMNC12, 
+          t1.PRVDRL12, 
+          t1.PHMONP12, 
+          t1.PMNCNP12, 
+          t1.PRDRNP12, 
+          t1.TRICR12X, 
+          t1.TRIAT12X, 
+          t1.MCAID12, 
+          t1.MCAID12X, 
+          t1.MCARE12, 
+          t1.MCARE12X, 
+          t1.MCDAT12X, 
+          t1.OTPAAT12, 
+          t1.OTPBAT12, 
+          t1.OTPUBA12, 
+          t1.OTPUBB12, 
+          t1.PRIDK12, 
+          t1.PRIEU12, 
+          t1.PRING12, 
+          t1.PRIOG12, 
+          t1.PRIS12, 
+          t1.PRIV12, 
+          t1.PRIVAT12, 
+          t1.PROUT12, 
+          t1.PUB12X, 
+          t1.PUBAT12X, 
+          t1.INS12X, 
+          t1.INSAT12X, 
+          t1.STAPR12, 
+          t1.STPRAT12, 
+          t1.DNTINS12, 
+          t1.PMDINS12, 
+          t1.PMEDUP31, 
+          t1.PMEDUP42, 
+          t1.PMEDUP53, 
+          t1.PMEDPY31, 
+          t1.PMEDPY42, 
+          t1.PMEDPY53, 
+          t1.PMEDPP31, 
+          t1.PMEDPP42, 
+          t1.PMEDPP53, 
+          t1.TOTTCH12, 
+          t1.TOTEXP12, 
+          t1.TOTSLF12, 
+          t1.TOTMCR12, 
+          t1.TOTMCD12, 
+          t1.TOTPRV12, 
+          t1.TOTVA12, 
+          t1.TOTTRI12, 
+          t1.TOTOFD12, 
+          t1.TOTSTL12, 
+          t1.TOTWCP12, 
+          t1.TOTOPR12, 
+          t1.TOTOPU12, 
+          t1.TOTOSR12, 
+          t1.TOTPTR12, 
+          t1.TOTOTH12, 
+          t1.ERTOT12, 
+          t1.IPZERO12, 
+          t1.IPDIS12, 
+          t1.IPNGTD12, 
+          t1.RXTOT12, 
+          t1.PERWT12F, 
+          t1.HEALTH_GENERAL, 
+          t1.HEALTH_LIMITS_ACTIVITY, 
+          t1.HEALTH_LIMITS_STAIRS, 
+          t1.ACCOMPLISH_PHYSICAL_PROBLEMS, 
+          t1.WORK_LIMIT_PHYSICAL_PROBLEMS, 
+          t1.ACCOMPLISH_MENTAL_PROBLEMS, 
+          t1.WORK_LIMIT_MENTAL_PROBLEMS, 
+          t1.PAIN_LIMIT_WORK, 
+          t1.CALM, 
+          t1.ENERGY, 
+          t1.DEPRESSED, 
+          t1.HEALTH_SOCIAL, 
+          t1.EDUCYR_RECODED, 
+          t1.EDUYRDEG_RECODED, 
+          t1.MARITAL_STATUS, 
+          t1.EMPLOY_STATUS_31, 
+          t1.EMPLOY_STATUS_42, 
+          t1.EMPLOY_STATUS_53, 
+          t1.NOT_NEED_H_INSURANCE, 
+          t1.HEALTH_WORTH_COST, 
+          t1.LIKELY_RISK, 
+          t1.ILLS_NO_HELP, 
+          t1.SAQINTERVIEW_LANG, 
+          t1.SPEC_REFERRAL, 
+          t1.SEE_SPECIALIST, 
+          t1.CHECK_BLOOD_PRESSURE, 
+          t1.SMOKE, 
+          t1.RATE_HEALTH_CARE, 
+          t1.PERC_HEALTH_31, 
+          t1.PERC_HEALTH_42, 
+          t1.PERC_HEALTH_53, 
+          t1.BMINDX_RECODED, 
+          t1.ENGSPK_RECODED, 
+          t1.PLCTYP_RECODED, 
+          t1.TYPEPE_RECODED, 
+          t1.PROVIDER_TYPE, 
+          t1.HAVE_USC, 
+          t1.WHY_NO_USC, 
+          /* HEALTH_GENERAL_REVERSED */
+            (6 - t1.HEALTH_GENERAL) LABEL=
+            "Values of ""HEALTH_GENERAL"" are reversed so that higher value = better health" AS HEALTH_GENERAL_REVERSED, 
+          /* PAIN_LIMIT_WORK_REVERSED */
+            (6 - t1.PAIN_LIMIT_WORK) LABEL=
+            "Values of ""PAIN_LIMIT_WORK"" are reversed so that higher value = better health" AS 
+            PAIN_LIMIT_WORK_REVERSED, 
+          /* CALM_REVERSED */
+            (6 - t1.CALM) LABEL="Values of ""CALM"" are reversed so that higher value = better health" AS CALM_REVERSED, 
+          /* ENERGY_REVERSED */
+            (6 - t1.ENERGY) LABEL="Values of ""ENERGY"" are reversed so that higher value = better health" AS 
+            ENERGY_REVERSED, 
+          t1.EDRECODE, 
+          t1.EDRECODE_RECODED, 
+          /* PERC_HEALTH_31_REVERSED */
+            (6 - t1.PERC_HEALTH_31) LABEL="Reverse coded PERC_HEALTH_31 so higher values = better health" AS 
+            PERC_HEALTH_31_REVERSED, 
+          /* PERC_HEALTH_42_REVERSED */
+            (6 - t1.PERC_HEALTH_42) LABEL="Reverse coded PERC_HEALTH_42 so higher values = better health" AS 
+            PERC_HEALTH_42_REVERSED, 
+          /* PERC_HEALTH_53_REVERSED */
+            (6 - t1.PERC_HEALTH_53) LABEL="Reversed coded PERC_HEALTH_53 so higher values = better health" AS 
+            PERC_HEALTH_53_REVERSED
+      FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED t1;
+QUIT;
+
+GOPTIONS NOACCESSIBLE;
+
+
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Table Analysis38   */
+%LET _CLIENTTASKLABEL='Table Analysis38';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011215.egp';
 
 GOPTIONS ACCESSIBLE;
 /* -------------------------------------------------------------------
    Code generated by SAS Task
 
-   Generated on: Monday, January 12, 2015 at 9:40:21 AM
-   By task: Table Analysis37
+   Generated on: Monday, January 12, 2015 at 9:48:34 AM
+   By task: Table Analysis38
 
-   Input Data: Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
+   Input Data: Local:WORK.SUBSET_RECODED_REVERSED
    Server:  Local
    ------------------------------------------------------------------- */
 
 %_eg_conditional_dropds(WORK.SORTTempTableSorted);
 /* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_MEPS_FULLYR_2012_MANAGED
+   Sort data set Local:WORK.SUBSET_RECODED_REVERSED
    ------------------------------------------------------------------- */
 
 PROC SQL;
 	CREATE VIEW WORK.SORTTempTableSorted AS
-		SELECT T.WHY_NO_USC, T.YNOUSC42
-	FROM WORK.QUERY_MEPS_FULLYR_2012_MANAGED as T
+		SELECT T.HEALTH_GENERAL, T.PAIN_LIMIT_WORK, T.CALM, T.ENERGY, T.HEALTH_GENERAL_REVERSED, T.PAIN_LIMIT_WORK_REVERSED, T.CALM_REVERSED, T.ENERGY_REVERSED, T.PERC_HEALTH_31, T.PERC_HEALTH_42, T.PERC_HEALTH_53, T.PERC_HEALTH_31_REVERSED
+		     , T.PERC_HEALTH_42_REVERSED, T.PERC_HEALTH_53_REVERSED
+	FROM WORK.SUBSET_RECODED_REVERSED as T
 ;
 QUIT;
 TITLE;
@@ -3438,7 +1986,55 @@ FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSY
 PROC FREQ DATA = WORK.SORTTempTableSorted
 	ORDER=INTERNAL
 ;
-	TABLES YNOUSC42 * WHY_NO_USC /
+	TABLES HEALTH_GENERAL * HEALTH_GENERAL_REVERSED /
+		NOROW
+		NOCOL
+		NOPERCENT
+		MISSPRINT
+		NOCUM
+		SCORES=TABLE
+		ALPHA=0.05;
+	TABLES PAIN_LIMIT_WORK * PAIN_LIMIT_WORK_REVERSED /
+		NOROW
+		NOCOL
+		NOPERCENT
+		MISSPRINT
+		NOCUM
+		SCORES=TABLE
+		ALPHA=0.05;
+	TABLES CALM * CALM_REVERSED /
+		NOROW
+		NOCOL
+		NOPERCENT
+		MISSPRINT
+		NOCUM
+		SCORES=TABLE
+		ALPHA=0.05;
+	TABLES ENERGY * ENERGY_REVERSED /
+		NOROW
+		NOCOL
+		NOPERCENT
+		MISSPRINT
+		NOCUM
+		SCORES=TABLE
+		ALPHA=0.05;
+	TABLES PERC_HEALTH_31 * PERC_HEALTH_31_REVERSED /
+		NOROW
+		NOCOL
+		NOPERCENT
+		MISSPRINT
+		NOCUM
+		SCORES=TABLE
+		ALPHA=0.05;
+	TABLES PERC_HEALTH_42 * PERC_HEALTH_42_REVERSED /
+		NOROW
+		NOCOL
+		NOPERCENT
+		MISSPRINT
+		NOCUM
+		SCORES=TABLE
+		ALPHA=0.05;
+	TABLES PERC_HEALTH_53 * PERC_HEALTH_53_REVERSED /
 		NOROW
 		NOCOL
 		NOPERCENT
@@ -3451,6 +2047,963 @@ PROC FREQ DATA = WORK.SORTTempTableSorted
    ------------------------------------------------------------------- */
 RUN; QUIT;
 %_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Generate Aggregate Health Variables   */
+%LET _CLIENTTASKLABEL='Generate Aggregate Health Variables';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011215.egp';
+
+GOPTIONS ACCESSIBLE;
+%_eg_conditional_dropds(WORK.QUERY_FOR_AGGREGATE_HEALTH);
+
+PROC SQL;
+   CREATE TABLE WORK."QUERY_FOR_AGGREGATE_HEALTH"n(label="QUERY_FOR_AGGREGATE_HEALTH") AS 
+   SELECT t1.DUPERSID, 
+          t1.AGE12X, 
+          t1.SEX, 
+          t1.REGION12, 
+          t1.RACETHX, 
+          t1.MARRY12X, 
+          t1.EDUCYR, 
+          t1.EDUYRDEG, 
+          t1.EMPST31, 
+          t1.EMPST42, 
+          t1.EMPST53, 
+          t1.SAQELIG, 
+          t1.ADPRX42, 
+          t1.ADILCR42, 
+          t1.ADILWW42, 
+          t1.ADRTCR42, 
+          t1.ADRTWW42, 
+          t1.ADAPPT42, 
+          t1.ADNDCR42, 
+          t1.ADEGMC42, 
+          t1.ADLIST42, 
+          t1.ADEXPL42, 
+          t1.ADRESP42, 
+          t1.ADPRTM42, 
+          t1.ADINST42, 
+          t1.ADEZUN42, 
+          t1.ADTLHW42, 
+          t1.ADFFRM42, 
+          t1.ADFHLP42, 
+          t1.ADHECR42, 
+          t1.ADSMOK42, 
+          t1.ADNSMK42, 
+          t1.ADDRBP42, 
+          t1.ADSPEC42, 
+          t1.ADSPRF42, 
+          t1.ADGENH42, 
+          t1.ADDAYA42, 
+          t1.ADCLIM42, 
+          t1.ADPALS42, 
+          t1.ADPWLM42, 
+          t1.ADMALS42, 
+          t1.ADMWLM42, 
+          t1.ADPAIN42, 
+          t1.ADCAPE42, 
+          t1.ADNRGY42, 
+          t1.ADDOWN42, 
+          t1.ADSOCA42, 
+          t1.PCS42, 
+          t1.MCS42, 
+          t1.SFFLAG42, 
+          t1.ADNERV42, 
+          t1.ADHOPE42, 
+          t1.ADREST42, 
+          t1.ADSAD42, 
+          t1.ADEFRT42, 
+          t1.ADWRTH42, 
+          t1.K6SUM42, 
+          t1.ADINTR42, 
+          t1.ADDPRS42, 
+          t1.PHQ242, 
+          t1.ADINSA42, 
+          t1.ADINSB42, 
+          t1.ADRISK42, 
+          t1.ADOVER42, 
+          t1.ADCMPM42, 
+          t1.ADCMPD42, 
+          t1.ADCMPY42, 
+          t1.ADLANG42, 
+          t1.SAQWT12F, 
+          t1.FAMS1231, 
+          t1.PROXY12, 
+          t1.INTVLANG, 
+          t1.ELGRND12, 
+          t1.RTHLTH31, 
+          t1.RTHLTH42, 
+          t1.RTHLTH53, 
+          t1.MNHLTH31, 
+          t1.MNHLTH42, 
+          t1.MNHLTH53, 
+          t1.HIBPDX, 
+          t1.CHDDX, 
+          t1.ANGIDX, 
+          t1.MIDX, 
+          t1.OHRTDX, 
+          t1.STRKDX, 
+          t1.EMPHDX, 
+          t1.CHOLDX, 
+          t1.CANCERDX, 
+          t1.DIABDX, 
+          t1.ARTHDX, 
+          t1.ASTHDX, 
+          t1.PREGNT31, 
+          t1.PREGNT42, 
+          t1.PREGNT53, 
+          t1.BMINDX53, 
+          t1.LANGHM42, 
+          t1.ENGCMF42, 
+          t1.ENGSPK42, 
+          t1.USBORN42, 
+          t1.USLIVE42, 
+          t1.HAVEUS42, 
+          t1.YNOUSC42, 
+          t1.PROVTY42, 
+          t1.PLCTYP42, 
+          t1.TYPEPE42, 
+          t1.LANGPR42, 
+          t1.MDUNAB42, 
+          t1.DPOTSD12, 
+          t1.TTLP12X, 
+          t1.FAMINC12, 
+          t1.POVCAT12, 
+          t1.POVLEV12, 
+          t1.UNINS12, 
+          t1.INSCOV12, 
+          t1.INSURC12, 
+          t1.TRIST12X, 
+          t1.TRIPR12X, 
+          t1.TRIEX12X, 
+          t1.TRILI12X, 
+          t1.TRICH12X, 
+          t1.MCRPD12, 
+          t1.MCRPD12X, 
+          t1.MCRPB12, 
+          t1.MCRPHO12, 
+          t1.MCDHMO12, 
+          t1.MCDMC12, 
+          t1.PRVHMO12, 
+          t1.PRVMNC12, 
+          t1.PRVDRL12, 
+          t1.PHMONP12, 
+          t1.PMNCNP12, 
+          t1.PRDRNP12, 
+          t1.TRICR12X, 
+          t1.TRIAT12X, 
+          t1.MCAID12, 
+          t1.MCAID12X, 
+          t1.MCARE12, 
+          t1.MCARE12X, 
+          t1.MCDAT12X, 
+          t1.OTPAAT12, 
+          t1.OTPBAT12, 
+          t1.OTPUBA12, 
+          t1.OTPUBB12, 
+          t1.PRIDK12, 
+          t1.PRIEU12, 
+          t1.PRING12, 
+          t1.PRIOG12, 
+          t1.PRIS12, 
+          t1.PRIV12, 
+          t1.PRIVAT12, 
+          t1.PROUT12, 
+          t1.PUB12X, 
+          t1.PUBAT12X, 
+          t1.INS12X, 
+          t1.INSAT12X, 
+          t1.STAPR12, 
+          t1.STPRAT12, 
+          t1.DNTINS12, 
+          t1.PMDINS12, 
+          t1.PMEDUP31, 
+          t1.PMEDUP42, 
+          t1.PMEDUP53, 
+          t1.PMEDPY31, 
+          t1.PMEDPY42, 
+          t1.PMEDPY53, 
+          t1.PMEDPP31, 
+          t1.PMEDPP42, 
+          t1.PMEDPP53, 
+          t1.TOTTCH12, 
+          t1.TOTEXP12, 
+          t1.TOTSLF12, 
+          t1.TOTMCR12, 
+          t1.TOTMCD12, 
+          t1.TOTPRV12, 
+          t1.TOTVA12, 
+          t1.TOTTRI12, 
+          t1.TOTOFD12, 
+          t1.TOTSTL12, 
+          t1.TOTWCP12, 
+          t1.TOTOPR12, 
+          t1.TOTOPU12, 
+          t1.TOTOSR12, 
+          t1.TOTPTR12, 
+          t1.TOTOTH12, 
+          t1.ERTOT12, 
+          t1.IPZERO12, 
+          t1.IPDIS12, 
+          t1.IPNGTD12, 
+          t1.RXTOT12, 
+          t1.PERWT12F, 
+          t1.HEALTH_GENERAL, 
+          t1.HEALTH_LIMITS_ACTIVITY, 
+          t1.HEALTH_LIMITS_STAIRS, 
+          t1.ACCOMPLISH_PHYSICAL_PROBLEMS, 
+          t1.WORK_LIMIT_PHYSICAL_PROBLEMS, 
+          t1.ACCOMPLISH_MENTAL_PROBLEMS, 
+          t1.WORK_LIMIT_MENTAL_PROBLEMS, 
+          t1.PAIN_LIMIT_WORK, 
+          t1.CALM, 
+          t1.ENERGY, 
+          t1.DEPRESSED, 
+          t1.HEALTH_SOCIAL, 
+          t1.EDUCYR_RECODED, 
+          t1.EDUYRDEG_RECODED, 
+          t1.MARITAL_STATUS, 
+          t1.EMPLOY_STATUS_31, 
+          t1.EMPLOY_STATUS_42, 
+          t1.EMPLOY_STATUS_53, 
+          t1.NOT_NEED_H_INSURANCE, 
+          t1.HEALTH_WORTH_COST, 
+          t1.LIKELY_RISK, 
+          t1.ILLS_NO_HELP, 
+          t1.SAQINTERVIEW_LANG, 
+          t1.SPEC_REFERRAL, 
+          t1.SEE_SPECIALIST, 
+          t1.CHECK_BLOOD_PRESSURE, 
+          t1.SMOKE, 
+          t1.RATE_HEALTH_CARE, 
+          t1.PERC_HEALTH_31, 
+          t1.PERC_HEALTH_42, 
+          t1.PERC_HEALTH_53, 
+          t1.BMINDX_RECODED, 
+          t1.ENGSPK_RECODED, 
+          t1.PLCTYP_RECODED, 
+          t1.TYPEPE_RECODED, 
+          t1.PROVIDER_TYPE, 
+          t1.HAVE_USC, 
+          t1.WHY_NO_USC, 
+          t1.HEALTH_GENERAL_REVERSED, 
+          t1.PAIN_LIMIT_WORK_REVERSED, 
+          t1.CALM_REVERSED, 
+          t1.ENERGY_REVERSED, 
+          t1.EDRECODE, 
+          t1.EDRECODE_RECODED, 
+          t1.PERC_HEALTH_31_REVERSED, 
+          t1.PERC_HEALTH_42_REVERSED, 
+          t1.PERC_HEALTH_53_REVERSED, 
+          /* AGGREGATE_HEALTH_SCORE */
+            ((t1.HEALTH_GENERAL_REVERSED +  t1.PAIN_LIMIT_WORK_REVERSED +  t1.CALM_REVERSED +  t1.ENERGY_REVERSED +  
+            t1.HEALTH_LIMITS_ACTIVITY +  t1.HEALTH_LIMITS_STAIRS +  t1.ACCOMPLISH_PHYSICAL_PROBLEMS +  
+            t1.WORK_LIMIT_PHYSICAL_PROBLEMS +  t1.ACCOMPLISH_MENTAL_PROBLEMS +  t1.WORK_LIMIT_MENTAL_PROBLEMS +  
+            t1.DEPRESSED +  t1.HEALTH_SOCIAL)
+            ) LABEL="Aggregate Health Score" AS AGGREGATE_HEALTH_SCORE, 
+          /* AGGREGATE_PERCEIVED_HEALTH */
+            ((t1.PERC_HEALTH_31_REVERSED + t1.PERC_HEALTH_42_REVERSED + t1.PERC_HEALTH_53_REVERSED)) LABEL=
+            "Perceived health status for entire year" AS AGGREGATE_PERCEIVED_HEALTH
+      FROM WORK.SUBSET_RECODED_REVERSED t1;
+QUIT;
+
+GOPTIONS NOACCESSIBLE;
+
+
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: List Data   */
+%LET _CLIENTTASKLABEL='List Data';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011215.egp';
+
+GOPTIONS ACCESSIBLE;
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Monday, January 12, 2015 at 9:48:34 AM
+   By task: List Data
+
+   Input Data: Local:WORK.QUERY_FOR_AGGREGATE_HEALTH
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set Local:WORK.QUERY_FOR_AGGREGATE_HEALTH
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.HEALTH_GENERAL_REVERSED, T.PAIN_LIMIT_WORK_REVERSED, T.CALM_REVERSED, T.ENERGY_REVERSED, T.HEALTH_LIMITS_ACTIVITY, T.HEALTH_LIMITS_STAIRS, T.ACCOMPLISH_PHYSICAL_PROBLEMS, T.WORK_LIMIT_PHYSICAL_PROBLEMS
+		     , T.ACCOMPLISH_MENTAL_PROBLEMS, T.WORK_LIMIT_MENTAL_PROBLEMS, T.DEPRESSED, T.HEALTH_SOCIAL, T.AGGREGATE_HEALTH_SCORE
+	FROM WORK.QUERY_FOR_AGGREGATE_HEALTH as T
+;
+QUIT;
+TITLE;
+TITLE1 "SF-12 Variables and their Aggregate";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+
+PROC PRINT DATA=WORK.SORTTempTableSorted
+	(OBS=229)
+	OBS="Row number"
+	;
+	VAR HEALTH_GENERAL_REVERSED PAIN_LIMIT_WORK_REVERSED CALM_REVERSED ENERGY_REVERSED HEALTH_LIMITS_ACTIVITY HEALTH_LIMITS_STAIRS ACCOMPLISH_PHYSICAL_PROBLEMS WORK_LIMIT_PHYSICAL_PROBLEMS ACCOMPLISH_MENTAL_PROBLEMS WORK_LIMIT_MENTAL_PROBLEMS DEPRESSED
+	  HEALTH_SOCIAL AGGREGATE_HEALTH_SCORE;
+RUN;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: List Data1   */
+%LET _CLIENTTASKLABEL='List Data1';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011215.egp';
+
+GOPTIONS ACCESSIBLE;
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Monday, January 12, 2015 at 9:48:34 AM
+   By task: List Data1
+
+   Input Data: Local:WORK.QUERY_FOR_AGGREGATE_HEALTH
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set Local:WORK.QUERY_FOR_AGGREGATE_HEALTH
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.PERC_HEALTH_31_REVERSED, T.PERC_HEALTH_42_REVERSED, T.PERC_HEALTH_53_REVERSED, T.AGGREGATE_PERCEIVED_HEALTH
+	FROM WORK.QUERY_FOR_AGGREGATE_HEALTH as T
+;
+QUIT;
+TITLE;
+TITLE1 "Report Listing";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+
+PROC PRINT DATA=WORK.SORTTempTableSorted
+	(OBS=50)
+	OBS="Row number"
+	;
+	VAR PERC_HEALTH_31_REVERSED PERC_HEALTH_42_REVERSED PERC_HEALTH_53_REVERSED AGGREGATE_PERCEIVED_HEALTH;
+RUN;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Summary Statistics   */
+%LET _CLIENTTASKLABEL='Summary Statistics';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011215.egp';
+
+GOPTIONS ACCESSIBLE;
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Monday, January 12, 2015 at 9:48:35 AM
+   By task: Summary Statistics
+
+   Input Data: Local:WORK.QUERY_FOR_AGGREGATE_HEALTH
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set Local:WORK.QUERY_FOR_AGGREGATE_HEALTH
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.AGGREGATE_HEALTH_SCORE, T.AGGREGATE_PERCEIVED_HEALTH, T.EDRECODE_RECODED, T.MARITAL_STATUS
+	FROM WORK.QUERY_FOR_AGGREGATE_HEALTH(FIRSTOBS=1 ) as T
+;
+QUIT;
+/* -------------------------------------------------------------------
+   Run the Means Procedure
+   ------------------------------------------------------------------- */
+TITLE;
+TITLE1 "Summary Statistics";
+TITLE2 "Results";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.)) by Sean Mihaljevich";
+PROC MEANS DATA=WORK.SORTTempTableSorted
+	FW=12
+	PRINTALLTYPES
+	CHARTYPE
+	QMETHOD=OS
+	VARDEF=DF 	
+		MEAN 
+		STD 
+		MIN 
+		MAX 
+		MODE 
+		N 
+		NMISS	
+		Q1 
+		MEDIAN 
+		Q3	;
+	VAR AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH EDRECODE_RECODED MARITAL_STATUS;
+
+RUN;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Distribution Analysis for Aggregate Health Score   */
+%LET _CLIENTTASKLABEL='Distribution Analysis for Aggregate Health Score';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011215.egp';
+
+GOPTIONS ACCESSIBLE;
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Monday, January 12, 2015 at 9:48:35 AM
+   By task: Distribution Analysis for Aggregate Health Score
+
+   Input Data: Local:WORK.QUERY_FOR_AGGREGATE_HEALTH
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   PROC SHEWHART does not support DEVICE=ACTIVEX. Switching to PNG.
+   ------------------------------------------------------------------- */
+OPTIONS DEV=PNG;
+ODS GRAPHICS ON;
+/* -------------------------------------------------------------------
+   Sort data set Local:WORK.QUERY_FOR_AGGREGATE_HEALTH
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.AGGREGATE_HEALTH_SCORE, T.AGGREGATE_PERCEIVED_HEALTH, T.EDRECODE_RECODED, T.MARITAL_STATUS
+	FROM WORK.QUERY_FOR_AGGREGATE_HEALTH(FIRSTOBS=1 ) as T
+;
+QUIT;
+TITLE;
+TITLE1 "Distribution analysis of: AGGREGATE_HEALTH_SCORE, AGGREGATE_PERCEIVED_HEALTH, EDRECODE_RECODED, MARITAL_STATUS";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.)) by Sean Mihaljevich";
+	ODS EXCLUDE EXTREMEOBS MODES MOMENTS;
+	
+	GOPTIONS htext=1 cells;
+	SYMBOL v=SQUARE c=BLUE h=1 cells;
+	PATTERN v=SOLID
+	;
+PROC UNIVARIATE DATA = WORK.SORTTempTableSorted
+		CIBASIC(TYPE=TWOSIDED ALPHA=0.05)
+		MU0=0
+;
+	VAR AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH EDRECODE_RECODED MARITAL_STATUS;
+	HISTOGRAM   AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH EDRECODE_RECODED MARITAL_STATUS / NORMAL	( 	W=1 	L=1 	COLOR=YELLOW  MU=EST SIGMA=EST)
+	
+		CFRAME=GRAY CAXES=BLACK WAXIS=1  CBARLINE=BLACK CFILL=BLUE PFILL=SOLID ;
+	;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+/* -------------------------------------------------------------------
+   Restoring original device type setting.
+   ------------------------------------------------------------------- */
+OPTIONS DEV=ACTIVEX;
+ODS GRAPHICS OFF;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Generate Categorical Variables   */
+%LET _CLIENTTASKLABEL='Generate Categorical Variables';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011215.egp';
+
+GOPTIONS ACCESSIBLE;
+%_eg_conditional_dropds(WORK.QUERY_FOR_AGGREGATE_HEALTH_0000);
+
+PROC SQL;
+   CREATE TABLE WORK.QUERY_FOR_AGGREGATE_HEALTH_0000 AS 
+   SELECT t1.DUPERSID, 
+          t1.AGE12X, 
+          t1.SEX, 
+          t1.REGION12, 
+          t1.RACETHX, 
+          t1.MARRY12X, 
+          t1.EDUCYR, 
+          t1.EDUYRDEG, 
+          t1.EMPST31, 
+          t1.EMPST42, 
+          t1.EMPST53, 
+          t1.SAQELIG, 
+          t1.ADPRX42, 
+          t1.EDRECODE, 
+          t1.ADILCR42, 
+          t1.EDRECODE_RECODED, 
+          t1.ADILWW42, 
+          t1.ADRTCR42, 
+          t1.ADRTWW42, 
+          t1.ADAPPT42, 
+          t1.ADNDCR42, 
+          t1.ADEGMC42, 
+          t1.ADLIST42, 
+          t1.ADEXPL42, 
+          t1.ADRESP42, 
+          t1.ADPRTM42, 
+          t1.ADINST42, 
+          t1.ADEZUN42, 
+          t1.ADTLHW42, 
+          t1.ADFFRM42, 
+          t1.ADFHLP42, 
+          t1.ADHECR42, 
+          t1.ADSMOK42, 
+          t1.ADNSMK42, 
+          t1.ADDRBP42, 
+          t1.ADSPEC42, 
+          t1.ADSPRF42, 
+          t1.ADGENH42, 
+          t1.ADDAYA42, 
+          t1.ADCLIM42, 
+          t1.ADPALS42, 
+          t1.ADPWLM42, 
+          t1.ADMALS42, 
+          t1.ADMWLM42, 
+          t1.ADPAIN42, 
+          t1.ADCAPE42, 
+          t1.ADNRGY42, 
+          t1.ADDOWN42, 
+          t1.ADSOCA42, 
+          t1.PCS42, 
+          t1.MCS42, 
+          t1.SFFLAG42, 
+          t1.ADNERV42, 
+          t1.ADHOPE42, 
+          t1.ADREST42, 
+          t1.ADSAD42, 
+          t1.ADEFRT42, 
+          t1.ADWRTH42, 
+          t1.K6SUM42, 
+          t1.ADINTR42, 
+          t1.ADDPRS42, 
+          t1.PHQ242, 
+          t1.ADINSA42, 
+          t1.ADINSB42, 
+          t1.ADRISK42, 
+          t1.ADOVER42, 
+          t1.ADCMPM42, 
+          t1.ADCMPD42, 
+          t1.ADCMPY42, 
+          t1.ADLANG42, 
+          t1.SAQWT12F, 
+          t1.FAMS1231, 
+          t1.PROXY12, 
+          t1.INTVLANG, 
+          t1.ELGRND12, 
+          t1.RTHLTH31, 
+          t1.RTHLTH42, 
+          t1.RTHLTH53, 
+          t1.MNHLTH31, 
+          t1.MNHLTH42, 
+          t1.MNHLTH53, 
+          t1.HIBPDX, 
+          t1.CHDDX, 
+          t1.ANGIDX, 
+          t1.MIDX, 
+          t1.OHRTDX, 
+          t1.STRKDX, 
+          t1.EMPHDX, 
+          t1.CHOLDX, 
+          t1.CANCERDX, 
+          t1.DIABDX, 
+          t1.ARTHDX, 
+          t1.ASTHDX, 
+          t1.PREGNT31, 
+          t1.PREGNT42, 
+          t1.PREGNT53, 
+          t1.BMINDX53, 
+          t1.LANGHM42, 
+          t1.ENGCMF42, 
+          t1.ENGSPK42, 
+          t1.USBORN42, 
+          t1.USLIVE42, 
+          t1.HAVEUS42, 
+          t1.YNOUSC42, 
+          t1.PROVTY42, 
+          t1.PLCTYP42, 
+          t1.TYPEPE42, 
+          t1.LANGPR42, 
+          t1.MDUNAB42, 
+          t1.DPOTSD12, 
+          t1.TTLP12X, 
+          t1.FAMINC12, 
+          t1.POVCAT12, 
+          t1.POVLEV12, 
+          t1.UNINS12, 
+          t1.INSCOV12, 
+          t1.INSURC12, 
+          t1.TRIST12X, 
+          t1.TRIPR12X, 
+          t1.TRIEX12X, 
+          t1.TRILI12X, 
+          t1.TRICH12X, 
+          t1.MCRPD12, 
+          t1.MCRPD12X, 
+          t1.MCRPB12, 
+          t1.MCRPHO12, 
+          t1.MCDHMO12, 
+          t1.MCDMC12, 
+          t1.PRVHMO12, 
+          t1.PRVMNC12, 
+          t1.PRVDRL12, 
+          t1.PHMONP12, 
+          t1.PMNCNP12, 
+          t1.PRDRNP12, 
+          t1.TRICR12X, 
+          t1.TRIAT12X, 
+          t1.MCAID12, 
+          t1.MCAID12X, 
+          t1.MCARE12, 
+          t1.MCARE12X, 
+          t1.MCDAT12X, 
+          t1.OTPAAT12, 
+          t1.OTPBAT12, 
+          t1.OTPUBA12, 
+          t1.OTPUBB12, 
+          t1.PRIDK12, 
+          t1.PRIEU12, 
+          t1.PRING12, 
+          t1.PRIOG12, 
+          t1.PRIS12, 
+          t1.PRIV12, 
+          t1.PRIVAT12, 
+          t1.PROUT12, 
+          t1.PUB12X, 
+          t1.PUBAT12X, 
+          t1.INS12X, 
+          t1.INSAT12X, 
+          t1.STAPR12, 
+          t1.STPRAT12, 
+          t1.DNTINS12, 
+          t1.PMDINS12, 
+          t1.PMEDUP31, 
+          t1.PMEDUP42, 
+          t1.PMEDUP53, 
+          t1.PMEDPY31, 
+          t1.PMEDPY42, 
+          t1.PMEDPY53, 
+          t1.PMEDPP31, 
+          t1.PMEDPP42, 
+          t1.PMEDPP53, 
+          t1.TOTTCH12, 
+          t1.TOTEXP12, 
+          t1.TOTSLF12, 
+          t1.TOTMCR12, 
+          t1.TOTMCD12, 
+          t1.TOTPRV12, 
+          t1.TOTVA12, 
+          t1.TOTTRI12, 
+          t1.TOTOFD12, 
+          t1.TOTSTL12, 
+          t1.TOTWCP12, 
+          t1.TOTOPR12, 
+          t1.TOTOPU12, 
+          t1.TOTOSR12, 
+          t1.TOTPTR12, 
+          t1.TOTOTH12, 
+          t1.ERTOT12, 
+          t1.IPZERO12, 
+          t1.IPDIS12, 
+          t1.IPNGTD12, 
+          t1.RXTOT12, 
+          t1.PERWT12F, 
+          t1.HEALTH_GENERAL, 
+          t1.HEALTH_LIMITS_ACTIVITY, 
+          t1.HEALTH_LIMITS_STAIRS, 
+          t1.ACCOMPLISH_PHYSICAL_PROBLEMS, 
+          t1.WORK_LIMIT_PHYSICAL_PROBLEMS, 
+          t1.ACCOMPLISH_MENTAL_PROBLEMS, 
+          t1.WORK_LIMIT_MENTAL_PROBLEMS, 
+          t1.PAIN_LIMIT_WORK, 
+          t1.CALM, 
+          t1.ENERGY, 
+          t1.DEPRESSED, 
+          t1.HEALTH_SOCIAL, 
+          t1.EDUCYR_RECODED, 
+          t1.EDUYRDEG_RECODED, 
+          t1.MARITAL_STATUS, 
+          t1.EMPLOY_STATUS_31, 
+          t1.EMPLOY_STATUS_42, 
+          t1.EMPLOY_STATUS_53, 
+          t1.NOT_NEED_H_INSURANCE, 
+          t1.HEALTH_WORTH_COST, 
+          t1.LIKELY_RISK, 
+          t1.ILLS_NO_HELP, 
+          t1.SAQINTERVIEW_LANG, 
+          t1.SPEC_REFERRAL, 
+          t1.SEE_SPECIALIST, 
+          t1.CHECK_BLOOD_PRESSURE, 
+          t1.SMOKE, 
+          t1.RATE_HEALTH_CARE, 
+          t1.PERC_HEALTH_31, 
+          t1.PERC_HEALTH_42, 
+          t1.PERC_HEALTH_53, 
+          t1.BMINDX_RECODED, 
+          t1.ENGSPK_RECODED, 
+          t1.PLCTYP_RECODED, 
+          t1.TYPEPE_RECODED, 
+          t1.PROVIDER_TYPE, 
+          t1.HAVE_USC, 
+          t1.WHY_NO_USC, 
+          t1.HEALTH_GENERAL_REVERSED, 
+          t1.PAIN_LIMIT_WORK_REVERSED, 
+          t1.CALM_REVERSED, 
+          t1.ENERGY_REVERSED, 
+          t1.PERC_HEALTH_31_REVERSED, 
+          t1.PERC_HEALTH_42_REVERSED, 
+          t1.PERC_HEALTH_53_REVERSED, 
+          t1.AGGREGATE_HEALTH_SCORE, 
+          t1.AGGREGATE_PERCEIVED_HEALTH, 
+          /* CATEGORICAL_AGGREGATE_HEALTH */
+            (CASE  
+               WHEN t1.AGGREGATE_HEALTH_SCORE >=54
+               THEN 5
+             WHEN t1.AGGREGATE_HEALTH_SCORE >= 50 and t1.AGGREGATE_HEALTH_SCORE < 54
+               THEN 4
+            WHEN t1.AGGREGATE_HEALTH_SCORE >=40 and t1.AGGREGATE_HEALTH_SCORE < 50
+               THEN 3
+            WHEN t1.AGGREGATE_HEALTH_SCORE >=26 and t1.AGGREGATE_HEALTH_SCORE <40
+               THEN 2
+            WHEN t1.AGGREGATE_HEALTH_SCORE >= 0 and t1.AGGREGATE_HEALTH_SCORE < 26
+               THEN 1
+               ELSE .
+            END) LABEL="Classfiies ""AGGREGATE_HEALTH_SCORE"" into categories" AS CATEGORICAL_AGGREGATE_HEALTH, 
+          /* CATEGORICAL_MARITAL STATUS */
+            (CASE  
+               WHEN t1.MARITAL_STATUS = 1 or t1.MARITAL_STATUS = 4
+               THEN 1
+                WHEN t1.MARITAL_STATUS = 2  or  t1.MARITAL_STATUS = 3 or  t1.MARITAL_STATUS = 5
+               THEN 0
+             ELSE .
+            END) LABEL="Categorized marital status in married (1) or not married (0)" AS 'CATEGORICAL_MARITAL STATUS'n, 
+          /* CATEGORICAL_EDUCATION */
+            (CASE  
+               WHEN t1.EDRECODE_RECODED = 0
+               THEN 0
+              WHEN t1.EDRECODE_RECODED <=5 and t1.EDRECODE_RECODED >= 1
+               THEN 1
+            WHEN t1.EDRECODE_RECODED <=8 and t1.EDRECODE_RECODED >= 6
+               THEN 2
+            WHEN t1.EDRECODE_RECODED <=12 and t1.EDRECODE_RECODED >= 9
+               THEN 3
+            WHEN t1.EDRECODE_RECODED = 13
+               THEN 4
+            WHEN t1.EDRECODE_RECODED = 14
+               THEN 5
+            WHEN t1.EDRECODE_RECODED = 15
+               THEN 6
+            WHEN t1.EDRECODE_RECODED = 16
+               THEN 7
+               ELSE .
+            END) LABEL="Categorized EDRECODE_RECODED" AS CATEGORICAL_EDUCATION, 
+          /* CATEGORICAL_PERCEIVED_HEALTH */
+            (CASE  
+               WHEN t1.AGGREGATE_PERCEIVED_HEALTH <= 15 and t1.AGGREGATE_PERCEIVED_HEALTH > 11
+               THEN 3
+            WHEN t1.AGGREGATE_PERCEIVED_HEALTH <= 11 and t1.AGGREGATE_PERCEIVED_HEALTH >= 7
+               THEN 2
+            WHEN t1.AGGREGATE_PERCEIVED_HEALTH <= 6 and t1.AGGREGATE_PERCEIVED_HEALTH >= 0
+               THEN 1
+               ELSE .
+            END) LABEL="Categorized AGGREGATE_PERCIEVED_HEALTH" AS CATEGORICAL_PERCEIVED_HEALTH
+      FROM WORK.QUERY_FOR_AGGREGATE_HEALTH t1;
+QUIT;
+
+GOPTIONS NOACCESSIBLE;
+
+
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Table Analysis   */
+%LET _CLIENTTASKLABEL='Table Analysis';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011215.egp';
+
+GOPTIONS ACCESSIBLE;
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Monday, January 12, 2015 at 9:48:35 AM
+   By task: Table Analysis
+
+   Input Data: Local:WORK.QUERY_FOR_AGGREGATE_HEALTH_0000
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set Local:WORK.QUERY_FOR_AGGREGATE_HEALTH_0000
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.CATEGORICAL_AGGREGATE_HEALTH, T."CATEGORICAL_MARITAL STATUS"n, T.CATEGORICAL_EDUCATION, T.MARITAL_STATUS, T.EDRECODE_RECODED, T.AGGREGATE_HEALTH_SCORE, T.CATEGORICAL_PERCEIVED_HEALTH, T.AGGREGATE_PERCEIVED_HEALTH
+	FROM WORK.QUERY_FOR_AGGREGATE_HEALTH_0000 as T
+;
+QUIT;
+TITLE;
+TITLE1 "Table Analysis";
+TITLE2 "Results";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC FREQ DATA = WORK.SORTTempTableSorted
+	ORDER=INTERNAL
+;
+	TABLES AGGREGATE_HEALTH_SCORE * CATEGORICAL_AGGREGATE_HEALTH /
+		NOROW
+		NOCOL
+		NOPERCENT
+		MISSPRINT
+		NOCUM
+		SCORES=TABLE
+		ALPHA=0.05;
+	TABLES MARITAL_STATUS * "CATEGORICAL_MARITAL STATUS"n /
+		NOROW
+		NOCOL
+		NOPERCENT
+		MISSPRINT
+		NOCUM
+		SCORES=TABLE
+		ALPHA=0.05;
+	TABLES EDRECODE_RECODED * CATEGORICAL_EDUCATION /
+		NOROW
+		NOCOL
+		NOPERCENT
+		MISSPRINT
+		NOCUM
+		SCORES=TABLE
+		ALPHA=0.05;
+	TABLES AGGREGATE_PERCEIVED_HEALTH * CATEGORICAL_PERCEIVED_HEALTH /
+		NOROW
+		NOCOL
+		NOPERCENT
+		MISSPRINT
+		NOCUM
+		SCORES=TABLE
+		ALPHA=0.05;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: One-Way Frequencies   */
+%LET _CLIENTTASKLABEL='One-Way Frequencies';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011215.egp';
+
+GOPTIONS ACCESSIBLE;
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Monday, January 12, 2015 at 9:48:35 AM
+   By task: One-Way Frequencies
+
+   Input Data: Local:WORK.QUERY_FOR_AGGREGATE_HEALTH_0000
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORT);
+/* -------------------------------------------------------------------
+   Sort data set Local:WORK.QUERY_FOR_AGGREGATE_HEALTH_0000
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORT AS
+		SELECT T."CATEGORICAL_MARITAL STATUS"n, T.CATEGORICAL_EDUCATION
+	FROM WORK.QUERY_FOR_AGGREGATE_HEALTH_0000 as T
+;
+QUIT;
+
+TITLE;
+TITLE1 "One-Way Frequencies";
+TITLE2 "Results";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC FREQ DATA=WORK.SORT
+	ORDER=INTERNAL
+;
+	TABLES "CATEGORICAL_MARITAL STATUS"n / MISSPRINT  SCORES=TABLE;
+	TABLES CATEGORICAL_EDUCATION / MISSPRINT  SCORES=TABLE;
+RUN;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORT);
 TITLE; FOOTNOTE;
 
 
@@ -3462,8 +3015,8 @@ GOPTIONS NOACCESSIBLE;
 
 /*   START OF NODE: Data Set Attributes   */
 %LET _CLIENTTASKLABEL='Data Set Attributes';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_010915.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_010915.egp';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011215.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011215.egp';
 
 GOPTIONS ACCESSIBLE;
 LIBNAME ECLIB000 "P:\QAC\qac200\Data\MEPS";
@@ -3471,7 +3024,7 @@ LIBNAME ECLIB000 "P:\QAC\qac200\Data\MEPS";
 /* -------------------------------------------------------------------
    Code generated by SAS Task
 
-   Generated on: Monday, January 12, 2015 at 9:40:22 AM
+   Generated on: Monday, January 12, 2015 at 9:48:37 AM
    By task: Data Set Attributes
 
    Input Data: P:\QAC\qac200\Data\MEPS\meps_fullyr_2012.sas7bdat

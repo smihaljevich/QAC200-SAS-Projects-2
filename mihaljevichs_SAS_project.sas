@@ -1,14 +1,35 @@
 /* ----------------------------------------
 Code exported from SAS Enterprise Guide
-DATE: Thursday, January 15, 2015     TIME: 2:17:22 PM
-PROJECT: mihaljevichs_SAS_project_011515
-PROJECT PATH: P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp
+DATE: Friday, January 16, 2015     TIME: 3:20:21 PM
+PROJECT: mihaljevichs_SAS_project_011615
+PROJECT PATH: P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp
 ---------------------------------------- */
 
-/* Library assignment for Local.SEAN */
-Libname SEAN BASE 'P:\QAC\qac200\students\smihaljevich\Assignments' ;
-/* Library assignment for Local.SEAN */
-Libname SEAN BASE 'P:\QAC\qac200\students\smihaljevich\Assignments' ;
+/* save the current settings of XPIXELS and YPIXELS */
+/* so that they can be restored later               */
+%macro _sas_pushchartsize(new_xsize, new_ysize);
+	%global _savedxpixels _savedypixels;
+	options nonotes;
+	proc sql noprint;
+	select setting into :_savedxpixels
+	from sashelp.vgopt
+	where optname eq "XPIXELS";
+	select setting into :_savedypixels
+	from sashelp.vgopt
+	where optname eq "YPIXELS";
+	quit;
+	options notes;
+	GOPTIONS XPIXELS=&new_xsize YPIXELS=&new_ysize;
+%mend;
+
+/* restore the previous values for XPIXELS and YPIXELS */
+%macro _sas_popchartsize;
+	%if %symexist(_savedxpixels) %then %do;
+		GOPTIONS XPIXELS=&_savedxpixels YPIXELS=&_savedypixels;
+		%symdel _savedxpixels / nowarn;
+		%symdel _savedypixels / nowarn;
+	%end;
+%mend;
 
 
 /* Conditionally delete set of tables or views, if they exists          */
@@ -268,32 +289,6 @@ Libname SEAN BASE 'P:\QAC\qac200\students\smihaljevich\Assignments' ;
 
 %enterpriseguide
 
-/* save the current settings of XPIXELS and YPIXELS */
-/* so that they can be restored later               */
-%macro _sas_pushchartsize(new_xsize, new_ysize);
-	%global _savedxpixels _savedypixels;
-	options nonotes;
-	proc sql noprint;
-	select setting into :_savedxpixels
-	from sashelp.vgopt
-	where optname eq "XPIXELS";
-	select setting into :_savedypixels
-	from sashelp.vgopt
-	where optname eq "YPIXELS";
-	quit;
-	options notes;
-	GOPTIONS XPIXELS=&new_xsize YPIXELS=&new_ysize;
-%mend;
-
-/* restore the previous values for XPIXELS and YPIXELS */
-%macro _sas_popchartsize;
-	%if %symexist(_savedxpixels) %then %do;
-		GOPTIONS XPIXELS=&_savedxpixels YPIXELS=&_savedypixels;
-		%symdel _savedxpixels / nowarn;
-		%symdel _savedypixels / nowarn;
-	%end;
-%mend;
-
 ODS PROCTITLE;
 OPTIONS DEV=ACTIVEX;
 GOPTIONS XPIXELS=0 YPIXELS=0;
@@ -310,8 +305,8 @@ ODS tagsets.sasreport13(ID=EGSRX) FILE=EGSRX
 
 /*   START OF NODE: Assign Project Library (SEAN)   */
 %LET _CLIENTTASKLABEL='Assign Project Library (SEAN)';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
 
 GOPTIONS ACCESSIBLE;
 LIBNAME SEAN BASE "P:\QAC\qac200\students\smihaljevich\Assignments" ;
@@ -322,727 +317,2117 @@ GOPTIONS NOACCESSIBLE;
 %LET _CLIENTPROJECTNAME=;
 
 
-/*   START OF NODE: Correct Marital Status Variable   */
-LIBNAME EC100004 "P:\QAC\qac200\students\smihaljevich\Assignments";
-
-
-%LET _CLIENTTASKLABEL='Correct Marital Status Variable';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
+/*   START OF NODE: Bar Chart Sex   */
+%LET _CLIENTTASKLABEL='Bar Chart Sex';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
 
 GOPTIONS ACCESSIBLE;
-%_eg_conditional_dropds(SEAN.MEPS_FULLYR_ER_MERGED_FINAL_2);
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
 
-PROC SQL;
-   CREATE TABLE SEAN.MEPS_FULLYR_ER_MERGED_FINAL_2(label="MEPS_FULLYR_ER_MERGED_FINAL_2") AS 
-   SELECT t1.DUPERSID, 
-          t1.NUMBER_ER_VISITS, 
-          t1.CATEGORICAL_ER_VISITS, 
-          t1.COUNT_of_DUPERSID, 
-          t1.INFULLYR, 
-          t1.DUPERSID1, 
-          t1.AGE12X, 
-          t1.SEX, 
-          t1.REGION12, 
-          t1.RACETHX, 
-          t1.MARRY12X, 
-          t1.EDUCYR, 
-          t1.EDUYRDEG, 
-          t1.EMPST31, 
-          t1.EMPST42, 
-          t1.EMPST53, 
-          t1.SAQELIG, 
-          t1.ADPRX42, 
-          t1.EDRECODE, 
-          t1.ADILCR42, 
-          t1.EDRECODE_RECODED, 
-          t1.ADILWW42, 
-          t1.ADRTCR42, 
-          t1.ADRTWW42, 
-          t1.ADAPPT42, 
-          t1.ADNDCR42, 
-          t1.ADEGMC42, 
-          t1.ADLIST42, 
-          t1.ADEXPL42, 
-          t1.ADRESP42, 
-          t1.ADPRTM42, 
-          t1.ADINST42, 
-          t1.ADEZUN42, 
-          t1.ADTLHW42, 
-          t1.ADFFRM42, 
-          t1.ADFHLP42, 
-          t1.ADHECR42, 
-          t1.ADSMOK42, 
-          t1.ADNSMK42, 
-          t1.ADDRBP42, 
-          t1.ADSPEC42, 
-          t1.ADSPRF42, 
-          t1.ADGENH42, 
-          t1.ADDAYA42, 
-          t1.ADCLIM42, 
-          t1.ADPALS42, 
-          t1.ADPWLM42, 
-          t1.ADMALS42, 
-          t1.ADMWLM42, 
-          t1.ADPAIN42, 
-          t1.ADCAPE42, 
-          t1.ADNRGY42, 
-          t1.ADDOWN42, 
-          t1.ADSOCA42, 
-          t1.PCS42, 
-          t1.MCS42, 
-          t1.SFFLAG42, 
-          t1.ADNERV42, 
-          t1.ADHOPE42, 
-          t1.ADREST42, 
-          t1.ADSAD42, 
-          t1.ADEFRT42, 
-          t1.ADWRTH42, 
-          t1.K6SUM42, 
-          t1.ADINTR42, 
-          t1.ADDPRS42, 
-          t1.PHQ242, 
-          t1.ADINSA42, 
-          t1.ADINSB42, 
-          t1.ADRISK42, 
-          t1.ADOVER42, 
-          t1.ADCMPM42, 
-          t1.ADCMPD42, 
-          t1.ADCMPY42, 
-          t1.ADLANG42, 
-          t1.SAQWT12F, 
-          t1.FAMS1231, 
-          t1.PROXY12, 
-          t1.INTVLANG, 
-          t1.ELGRND12, 
-          t1.RTHLTH31, 
-          t1.RTHLTH42, 
-          t1.RTHLTH53, 
-          t1.MNHLTH31, 
-          t1.MNHLTH42, 
-          t1.MNHLTH53, 
-          t1.HIBPDX, 
-          t1.CHDDX, 
-          t1.ANGIDX, 
-          t1.MIDX, 
-          t1.OHRTDX, 
-          t1.STRKDX, 
-          t1.EMPHDX, 
-          t1.CHOLDX, 
-          t1.CANCERDX, 
-          t1.DIABDX, 
-          t1.ARTHDX, 
-          t1.ASTHDX, 
-          t1.PREGNT31, 
-          t1.PREGNT42, 
-          t1.PREGNT53, 
-          t1.BMINDX53, 
-          t1.LANGHM42, 
-          t1.ENGCMF42, 
-          t1.ENGSPK42, 
-          t1.USBORN42, 
-          t1.USLIVE42, 
-          t1.HAVEUS42, 
-          t1.YNOUSC42, 
-          t1.PROVTY42, 
-          t1.PLCTYP42, 
-          t1.TYPEPE42, 
-          t1.LANGPR42, 
-          t1.MDUNAB42, 
-          t1.DPOTSD12, 
-          t1.TTLP12X, 
-          t1.FAMINC12, 
-          t1.POVCAT12, 
-          t1.POVLEV12, 
-          t1.UNINS12, 
-          t1.INSCOV12, 
-          t1.INSURC12, 
-          t1.TRIST12X, 
-          t1.TRIPR12X, 
-          t1.TRIEX12X, 
-          t1.TRILI12X, 
-          t1.TRICH12X, 
-          t1.MCRPD12, 
-          t1.MCRPD12X, 
-          t1.MCRPB12, 
-          t1.MCRPHO12, 
-          t1.MCDHMO12, 
-          t1.MCDMC12, 
-          t1.PRVHMO12, 
-          t1.PRVMNC12, 
-          t1.PRVDRL12, 
-          t1.PHMONP12, 
-          t1.PMNCNP12, 
-          t1.PRDRNP12, 
-          t1.TRICR12X, 
-          t1.TRIAT12X, 
-          t1.MCAID12, 
-          t1.MCAID12X, 
-          t1.MCARE12, 
-          t1.MCARE12X, 
-          t1.MCDAT12X, 
-          t1.OTPAAT12, 
-          t1.OTPBAT12, 
-          t1.OTPUBA12, 
-          t1.OTPUBB12, 
-          t1.PRIDK12, 
-          t1.PRIEU12, 
-          t1.PRING12, 
-          t1.PRIOG12, 
-          t1.PRIS12, 
-          t1.PRIV12, 
-          t1.PRIVAT12, 
-          t1.PROUT12, 
-          t1.PUB12X, 
-          t1.PUBAT12X, 
-          t1.INS12X, 
-          t1.INSAT12X, 
-          t1.STAPR12, 
-          t1.STPRAT12, 
-          t1.DNTINS12, 
-          t1.PMDINS12, 
-          t1.PMEDUP31, 
-          t1.PMEDUP42, 
-          t1.PMEDUP53, 
-          t1.PMEDPY31, 
-          t1.PMEDPY42, 
-          t1.PMEDPY53, 
-          t1.PMEDPP31, 
-          t1.PMEDPP42, 
-          t1.PMEDPP53, 
-          t1.TOTTCH12, 
-          t1.TOTEXP12, 
-          t1.TOTSLF12, 
-          t1.TOTMCR12, 
-          t1.TOTMCD12, 
-          t1.TOTPRV12, 
-          t1.TOTVA12, 
-          t1.TOTTRI12, 
-          t1.TOTOFD12, 
-          t1.TOTSTL12, 
-          t1.TOTWCP12, 
-          t1.TOTOPR12, 
-          t1.TOTOPU12, 
-          t1.TOTOSR12, 
-          t1.TOTPTR12, 
-          t1.TOTOTH12, 
-          t1.ERTOT12, 
-          t1.IPZERO12, 
-          t1.IPDIS12, 
-          t1.IPNGTD12, 
-          t1.RXTOT12, 
-          t1.PERWT12F, 
-          t1.HEALTH_GENERAL, 
-          t1.HEALTH_LIMITS_ACTIVITY, 
-          t1.HEALTH_LIMITS_STAIRS, 
-          t1.ACCOMPLISH_PHYSICAL_PROBLEMS, 
-          t1.WORK_LIMIT_PHYSICAL_PROBLEMS, 
-          t1.ACCOMPLISH_MENTAL_PROBLEMS, 
-          t1.WORK_LIMIT_MENTAL_PROBLEMS, 
-          t1.PAIN_LIMIT_WORK, 
-          t1.CALM, 
-          t1.ENERGY, 
-          t1.DEPRESSED, 
-          t1.HEALTH_SOCIAL, 
-          t1.EDUCYR_RECODED, 
-          t1.EDUYRDEG_RECODED, 
-          t1.MARITAL_STATUS, 
-          t1.EMPLOY_STATUS_31, 
-          t1.EMPLOY_STATUS_42, 
-          t1.EMPLOY_STATUS_53, 
-          t1.NOT_NEED_H_INSURANCE, 
-          t1.HEALTH_WORTH_COST, 
-          t1.LIKELY_RISK, 
-          t1.ILLS_NO_HELP, 
-          t1.SAQINTERVIEW_LANG, 
-          t1.SPEC_REFERRAL, 
-          t1.SEE_SPECIALIST, 
-          t1.CHECK_BLOOD_PRESSURE, 
-          t1.SMOKE, 
-          t1.RATE_HEALTH_CARE, 
-          t1.PERC_HEALTH_31, 
-          t1.PERC_HEALTH_42, 
-          t1.PERC_HEALTH_53, 
-          t1.BMINDX_RECODED, 
-          t1.ENGSPK_RECODED, 
-          t1.PLCTYP_RECODED, 
-          t1.TYPEPE_RECODED, 
-          t1.PROVIDER_TYPE, 
-          t1.HAVE_USC, 
-          t1.WHY_NO_USC, 
-          t1.HEALTH_GENERAL_REVERSED, 
-          t1.PAIN_LIMIT_WORK_REVERSED, 
-          t1.CALM_REVERSED, 
-          t1.ENERGY_REVERSED, 
-          t1.PERC_HEALTH_31_REVERSED, 
-          t1.PERC_HEALTH_42_REVERSED, 
-          t1.PERC_HEALTH_53_REVERSED, 
-          t1.AGGREGATE_HEALTH_SCORE, 
-          t1.AGGREGATE_PERCEIVED_HEALTH, 
-          t1.CATEGORICAL_AGGREGATE_HEALTH, 
-          t1.CATEGORICAL_EDUCATION, 
-          t1.CATEGORICAL_PERCEIVED_HEALTH, 
-          t1.INER, 
-          t1.DUID, 
-          t1.PID, 
-          t1.DUPERSID11, 
-          t1.EVNTIDX, 
-          t1.EVENTRN, 
-          t1.ERHEVIDX, 
-          t1.FFEEIDX, 
-          t1.PANEL, 
-          t1.MPCDATA, 
-          t1.ERDATEYR, 
-          t1.ERDATEMM, 
-          t1.ERDATEDD, 
-          t1.SEEDOC, 
-          t1.VSTCTGRY, 
-          t1.VSTRELCN, 
-          t1.LABTEST, 
-          t1.SONOGRAM, 
-          t1.XRAYS, 
-          t1.MAMMOG, 
-          t1.MRI, 
-          t1.EKG, 
-          t1.EEG, 
-          t1.RCVVAC, 
-          t1.ANESTH, 
-          t1.THRTSWAB, 
-          t1.OTHSVCE, 
-          t1.SURGPROC, 
-          t1.MEDPRESC, 
-          t1.ERICD1X, 
-          t1.ERICD2X, 
-          t1.ERICD3X, 
-          t1.ERPRO1X, 
-          t1.ERCCC1X, 
-          t1.ERCCC2X, 
-          t1.ERCCC3X, 
-          t1.FFERTYPE, 
-          t1.FFBEF12, 
-          t1.ERXP12X, 
-          t1.ERTC12X, 
-          t1.ERFSF12X, 
-          t1.ERFMR12X, 
-          t1.ERFMD12X, 
-          t1.ERFPV12X, 
-          t1.ERFVA12X, 
-          t1.ERFTR12X, 
-          t1.ERFOF12X, 
-          t1.ERFSL12X, 
-          t1.ERFWC12X, 
-          t1.ERFOR12X, 
-          t1.ERFOU12X, 
-          t1.ERFOT12X, 
-          t1.ERFXP12X, 
-          t1.ERFTC12X, 
-          t1.ERDSF12X, 
-          t1.ERDMR12X, 
-          t1.ERDMD12X, 
-          t1.ERDPV12X, 
-          t1.ERDVA12X, 
-          t1.ERDTR12X, 
-          t1.ERDOF12X, 
-          t1.ERDSL12X, 
-          t1.ERDWC12X, 
-          t1.ERDOR12X, 
-          t1.ERDOU12X, 
-          t1.ERDOT12X, 
-          t1.ERDXP12X, 
-          t1.ERDTC12X, 
-          t1.IMPFLAG, 
-          t1.PERWT12F1, 
-          t1.VARSTR, 
-          t1.VARPSU, 
-          t1.XRAY_RECODED, 
-          t1.MRI_RECODED, 
-          /* CATEGORICAL_MARITAL_STATUS */
-            (t1.'CATEGORICAL_MARITAL STATUS'n) LABEL="Correction for CATEGORIAL_MARITAL STATUS" AS 
-            CATEGORICAL_MARITAL_STATUS
-      FROM EC100004.meps_fullyr_er_merged_final t1;
-QUIT;
-
-GOPTIONS NOACCESSIBLE;
-
-
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: Filter by Age   */
-%LET _CLIENTTASKLABEL='Filter by Age';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-%LET AgePrompt_min = 18;
-%LET AgePrompt_max = 75;
-
-GOPTIONS ACCESSIBLE;
-%_eg_conditional_dropds(WORK.QUERY_FOR_MEPS_FULLYR_ER_MERGED_);
-
-PROC SQL;
-   CREATE TABLE WORK.QUERY_FOR_MEPS_FULLYR_ER_MERGED_ AS 
-   SELECT t2.DUPERSID, 
-          t2.NUMBER_ER_VISITS, 
-          t2.CATEGORICAL_ER_VISITS, 
-          t2.COUNT_of_DUPERSID, 
-          t2.INFULLYR, 
-          t2.DUPERSID1, 
-          t2.AGE12X, 
-          t2.SEX, 
-          t2.REGION12, 
-          t2.RACETHX, 
-          t2.MARRY12X, 
-          t2.EDUCYR, 
-          t2.EDUYRDEG, 
-          t2.EMPST31, 
-          t2.EMPST42, 
-          t2.EMPST53, 
-          t2.SAQELIG, 
-          t2.ADPRX42, 
-          t2.EDRECODE, 
-          t2.ADILCR42, 
-          t2.EDRECODE_RECODED, 
-          t2.ADILWW42, 
-          t2.ADRTCR42, 
-          t2.ADRTWW42, 
-          t2.ADAPPT42, 
-          t2.ADNDCR42, 
-          t2.ADEGMC42, 
-          t2.ADLIST42, 
-          t2.ADEXPL42, 
-          t2.ADRESP42, 
-          t2.ADPRTM42, 
-          t2.ADINST42, 
-          t2.ADEZUN42, 
-          t2.ADTLHW42, 
-          t2.ADFFRM42, 
-          t2.ADFHLP42, 
-          t2.ADHECR42, 
-          t2.ADSMOK42, 
-          t2.ADNSMK42, 
-          t2.ADDRBP42, 
-          t2.ADSPEC42, 
-          t2.ADSPRF42, 
-          t2.ADGENH42, 
-          t2.ADDAYA42, 
-          t2.ADCLIM42, 
-          t2.ADPALS42, 
-          t2.ADPWLM42, 
-          t2.ADMALS42, 
-          t2.ADMWLM42, 
-          t2.ADPAIN42, 
-          t2.ADCAPE42, 
-          t2.ADNRGY42, 
-          t2.ADDOWN42, 
-          t2.ADSOCA42, 
-          t2.PCS42, 
-          t2.MCS42, 
-          t2.SFFLAG42, 
-          t2.ADNERV42, 
-          t2.ADHOPE42, 
-          t2.ADREST42, 
-          t2.ADSAD42, 
-          t2.ADEFRT42, 
-          t2.ADWRTH42, 
-          t2.K6SUM42, 
-          t2.ADINTR42, 
-          t2.ADDPRS42, 
-          t2.PHQ242, 
-          t2.ADINSA42, 
-          t2.ADINSB42, 
-          t2.ADRISK42, 
-          t2.ADOVER42, 
-          t2.ADCMPM42, 
-          t2.ADCMPD42, 
-          t2.ADCMPY42, 
-          t2.ADLANG42, 
-          t2.SAQWT12F, 
-          t2.FAMS1231, 
-          t2.PROXY12, 
-          t2.INTVLANG, 
-          t2.ELGRND12, 
-          t2.RTHLTH31, 
-          t2.RTHLTH42, 
-          t2.RTHLTH53, 
-          t2.MNHLTH31, 
-          t2.MNHLTH42, 
-          t2.MNHLTH53, 
-          t2.HIBPDX, 
-          t2.CHDDX, 
-          t2.ANGIDX, 
-          t2.MIDX, 
-          t2.OHRTDX, 
-          t2.STRKDX, 
-          t2.EMPHDX, 
-          t2.CHOLDX, 
-          t2.CANCERDX, 
-          t2.DIABDX, 
-          t2.ARTHDX, 
-          t2.ASTHDX, 
-          t2.PREGNT31, 
-          t2.PREGNT42, 
-          t2.PREGNT53, 
-          t2.BMINDX53, 
-          t2.LANGHM42, 
-          t2.ENGCMF42, 
-          t2.ENGSPK42, 
-          t2.USBORN42, 
-          t2.USLIVE42, 
-          t2.HAVEUS42, 
-          t2.YNOUSC42, 
-          t2.PROVTY42, 
-          t2.PLCTYP42, 
-          t2.TYPEPE42, 
-          t2.LANGPR42, 
-          t2.MDUNAB42, 
-          t2.DPOTSD12, 
-          t2.TTLP12X, 
-          t2.FAMINC12, 
-          t2.POVCAT12, 
-          t2.POVLEV12, 
-          t2.UNINS12, 
-          t2.INSCOV12, 
-          t2.INSURC12, 
-          t2.TRIST12X, 
-          t2.TRIPR12X, 
-          t2.TRIEX12X, 
-          t2.TRILI12X, 
-          t2.TRICH12X, 
-          t2.MCRPD12, 
-          t2.MCRPD12X, 
-          t2.MCRPB12, 
-          t2.MCRPHO12, 
-          t2.MCDHMO12, 
-          t2.MCDMC12, 
-          t2.PRVHMO12, 
-          t2.PRVMNC12, 
-          t2.PRVDRL12, 
-          t2.PHMONP12, 
-          t2.PMNCNP12, 
-          t2.PRDRNP12, 
-          t2.TRICR12X, 
-          t2.TRIAT12X, 
-          t2.MCAID12, 
-          t2.MCAID12X, 
-          t2.MCARE12, 
-          t2.MCARE12X, 
-          t2.MCDAT12X, 
-          t2.OTPAAT12, 
-          t2.OTPBAT12, 
-          t2.OTPUBA12, 
-          t2.OTPUBB12, 
-          t2.PRIDK12, 
-          t2.PRIEU12, 
-          t2.PRING12, 
-          t2.PRIOG12, 
-          t2.PRIS12, 
-          t2.PRIV12, 
-          t2.PRIVAT12, 
-          t2.PROUT12, 
-          t2.PUB12X, 
-          t2.PUBAT12X, 
-          t2.INS12X, 
-          t2.INSAT12X, 
-          t2.STAPR12, 
-          t2.STPRAT12, 
-          t2.DNTINS12, 
-          t2.PMDINS12, 
-          t2.PMEDUP31, 
-          t2.PMEDUP42, 
-          t2.PMEDUP53, 
-          t2.PMEDPY31, 
-          t2.PMEDPY42, 
-          t2.PMEDPY53, 
-          t2.PMEDPP31, 
-          t2.PMEDPP42, 
-          t2.PMEDPP53, 
-          t2.TOTTCH12, 
-          t2.TOTEXP12, 
-          t2.TOTSLF12, 
-          t2.TOTMCR12, 
-          t2.TOTMCD12, 
-          t2.TOTPRV12, 
-          t2.TOTVA12, 
-          t2.TOTTRI12, 
-          t2.TOTOFD12, 
-          t2.TOTSTL12, 
-          t2.TOTWCP12, 
-          t2.TOTOPR12, 
-          t2.TOTOPU12, 
-          t2.TOTOSR12, 
-          t2.TOTPTR12, 
-          t2.TOTOTH12, 
-          t2.ERTOT12, 
-          t2.IPZERO12, 
-          t2.IPDIS12, 
-          t2.IPNGTD12, 
-          t2.RXTOT12, 
-          t2.PERWT12F, 
-          t2.HEALTH_GENERAL, 
-          t2.HEALTH_LIMITS_ACTIVITY, 
-          t2.HEALTH_LIMITS_STAIRS, 
-          t2.ACCOMPLISH_PHYSICAL_PROBLEMS, 
-          t2.WORK_LIMIT_PHYSICAL_PROBLEMS, 
-          t2.ACCOMPLISH_MENTAL_PROBLEMS, 
-          t2.WORK_LIMIT_MENTAL_PROBLEMS, 
-          t2.PAIN_LIMIT_WORK, 
-          t2.CALM, 
-          t2.ENERGY, 
-          t2.DEPRESSED, 
-          t2.HEALTH_SOCIAL, 
-          t2.EDUCYR_RECODED, 
-          t2.EDUYRDEG_RECODED, 
-          t2.MARITAL_STATUS, 
-          t2.EMPLOY_STATUS_31, 
-          t2.EMPLOY_STATUS_42, 
-          t2.EMPLOY_STATUS_53, 
-          t2.NOT_NEED_H_INSURANCE, 
-          t2.HEALTH_WORTH_COST, 
-          t2.LIKELY_RISK, 
-          t2.ILLS_NO_HELP, 
-          t2.SAQINTERVIEW_LANG, 
-          t2.SPEC_REFERRAL, 
-          t2.SEE_SPECIALIST, 
-          t2.CHECK_BLOOD_PRESSURE, 
-          t2.SMOKE, 
-          t2.RATE_HEALTH_CARE, 
-          t2.PERC_HEALTH_31, 
-          t2.PERC_HEALTH_42, 
-          t2.PERC_HEALTH_53, 
-          t2.BMINDX_RECODED, 
-          t2.ENGSPK_RECODED, 
-          t2.PLCTYP_RECODED, 
-          t2.TYPEPE_RECODED, 
-          t2.PROVIDER_TYPE, 
-          t2.HAVE_USC, 
-          t2.WHY_NO_USC, 
-          t2.HEALTH_GENERAL_REVERSED, 
-          t2.PAIN_LIMIT_WORK_REVERSED, 
-          t2.CALM_REVERSED, 
-          t2.ENERGY_REVERSED, 
-          t2.PERC_HEALTH_31_REVERSED, 
-          t2.PERC_HEALTH_42_REVERSED, 
-          t2.PERC_HEALTH_53_REVERSED, 
-          t2.AGGREGATE_HEALTH_SCORE, 
-          t2.AGGREGATE_PERCEIVED_HEALTH, 
-          t2.CATEGORICAL_AGGREGATE_HEALTH, 
-          t2.CATEGORICAL_EDUCATION, 
-          t2.CATEGORICAL_PERCEIVED_HEALTH, 
-          t2.INER, 
-          t2.DUID, 
-          t2.PID, 
-          t2.DUPERSID11, 
-          t2.EVNTIDX, 
-          t2.EVENTRN, 
-          t2.ERHEVIDX, 
-          t2.FFEEIDX, 
-          t2.PANEL, 
-          t2.MPCDATA, 
-          t2.ERDATEYR, 
-          t2.ERDATEMM, 
-          t2.ERDATEDD, 
-          t2.SEEDOC, 
-          t2.VSTCTGRY, 
-          t2.VSTRELCN, 
-          t2.LABTEST, 
-          t2.SONOGRAM, 
-          t2.XRAYS, 
-          t2.MAMMOG, 
-          t2.MRI, 
-          t2.EKG, 
-          t2.EEG, 
-          t2.RCVVAC, 
-          t2.ANESTH, 
-          t2.THRTSWAB, 
-          t2.OTHSVCE, 
-          t2.SURGPROC, 
-          t2.MEDPRESC, 
-          t2.ERICD1X, 
-          t2.ERICD2X, 
-          t2.ERICD3X, 
-          t2.ERPRO1X, 
-          t2.ERCCC1X, 
-          t2.ERCCC2X, 
-          t2.ERCCC3X, 
-          t2.FFERTYPE, 
-          t2.FFBEF12, 
-          t2.ERXP12X, 
-          t2.ERTC12X, 
-          t2.ERFSF12X, 
-          t2.ERFMR12X, 
-          t2.ERFMD12X, 
-          t2.ERFPV12X, 
-          t2.ERFVA12X, 
-          t2.ERFTR12X, 
-          t2.ERFOF12X, 
-          t2.ERFSL12X, 
-          t2.ERFWC12X, 
-          t2.ERFOR12X, 
-          t2.ERFOU12X, 
-          t2.ERFOT12X, 
-          t2.ERFXP12X, 
-          t2.ERFTC12X, 
-          t2.ERDSF12X, 
-          t2.ERDMR12X, 
-          t2.ERDMD12X, 
-          t2.ERDPV12X, 
-          t2.ERDVA12X, 
-          t2.ERDTR12X, 
-          t2.ERDOF12X, 
-          t2.ERDSL12X, 
-          t2.ERDWC12X, 
-          t2.ERDOR12X, 
-          t2.ERDOU12X, 
-          t2.ERDOT12X, 
-          t2.ERDXP12X, 
-          t2.ERDTC12X, 
-          t2.IMPFLAG, 
-          t2.PERWT12F1, 
-          t2.VARSTR, 
-          t2.VARPSU, 
-          t2.XRAY_RECODED, 
-          t2.MRI_RECODED, 
-          t2.CATEGORICAL_MARITAL_STATUS
-      FROM SEAN.MEPS_FULLYR_ER_MERGED_FINAL_2 t2
-      WHERE %_eg_WhereParam( t2.AGE12X, AgePrompt, BETWEEN, TYPE=N, IS_EXPLICIT=0 );
-QUIT;
-
-GOPTIONS NOACCESSIBLE;
-
-
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-%SYMDEL AgePrompt_min;
-%SYMDEL AgePrompt_max;
-
-
-/*   START OF NODE: One-Way Frequencies   */
-%LET _CLIENTTASKLABEL='One-Way Frequencies';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-
-GOPTIONS ACCESSIBLE;
 /* -------------------------------------------------------------------
    Code generated by SAS Task
 
-   Generated on: Thursday, January 15, 2015 at 2:16:46 PM
-   By task: One-Way Frequencies
+   Generated on: Friday, January 16, 2015 at 3:16:12 PM
+   By task: Bar Chart Sex
 
-   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_MERGED_
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.SEX
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "1 = Male, 2 = Female" )
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for SEX";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 SEX
+ /
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Bar Chart Region   */
+%LET _CLIENTTASKLABEL='Bar Chart Region';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:12 PM
+   By task: Bar Chart Region
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.REGION12
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "1 = Northeast, 2 = Midwest, 3 = South, 4 = West" )
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for REGION12";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 REGION12
+ /
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Bar Chart Race   */
+%LET _CLIENTTASKLABEL='Bar Chart Race';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:13 PM
+   By task: Bar Chart Race
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.RACETHX
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "1 = Hispanic, 2 = White , 3 = Black, 4 = Asian, 5 = Other Race/Multiple Race" )
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for RACETHX";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 RACETHX
+ /
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Bar Chart Marital Status   */
+%LET _CLIENTTASKLABEL='Bar Chart Marital Status';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:14 PM
+   By task: Bar Chart Marital Status
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.CATEGORICAL_MARITAL_STATUS
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = Not Married, 1 = Married" )
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for CATEGORICAL_MARITAL_STATUS";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 CATEGORICAL_MARITAL_STATUS
+ /
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Bar Chart Education   */
+%LET _CLIENTTASKLABEL='Bar Chart Education';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:15 PM
+   By task: Bar Chart Education
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.CATEGORICAL_EDUCATION
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0= <1st Grade,1=Elementary,2=Middle School,3=HS,4=HS Degree,5=College,6=Col. Degree,7=Advanced" )
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for CATEGORICAL_EDUCATION";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 CATEGORICAL_EDUCATION
+ /
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Bar Chart Age   */
+%LET _CLIENTTASKLABEL='Bar Chart Age';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:16 PM
+   By task: Bar Chart Age
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.CATEGORICAL_AGE
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "Age Categories: 1 = 18-30, 2 = 31-40, 3 = 41-55, 4 =56-70, 5 = greater than 70" )
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for CATEGORICAL_AGE";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 CATEGORICAL_AGE
+ /
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Bar Chart MRI   */
+%LET _CLIENTTASKLABEL='Bar Chart MRI';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:17 PM
+   By task: Bar Chart MRI
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.MRI_RECODED
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive MRI, 1 = received MRI" )
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for MRI_RECODED";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 MRI_RECODED
+ /
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Bar Chart X-ray   */
+%LET _CLIENTTASKLABEL='Bar Chart X-ray';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:17 PM
+   By task: Bar Chart X-ray
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.XRAY_RECODED
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive X-ray, 1 = received X-ray" )
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for XRAY_RECODED";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 XRAY_RECODED
+ /
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Histogram Age   */
+%LET _CLIENTTASKLABEL='Histogram Age';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:18 PM
+   By task: Histogram Age
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.AGE12X
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Frequency of Specific Age" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "Age" )
+
+
+;
+TITLE;
+TITLE1 "Histogram for AGE12X";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 AGE12X
+ /
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=FREQ
+	OUTSIDE=FREQ
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Histogram ER Visits   */
+%LET _CLIENTTASKLABEL='Histogram ER Visits';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:19 PM
+   By task: Histogram ER Visits
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.NUMBER_ER_VISITS
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Frequency of Specific Value" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "Number of ER visits per person" )
+
+
+;
+TITLE;
+TITLE1 "Histogram for NUMBER_ER_VISITS";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 NUMBER_ER_VISITS
+ /
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=FREQ
+	OUTSIDE=FREQ
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Histogram Aggregate Health   */
+%LET _CLIENTTASKLABEL='Histogram Aggregate Health';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:20 PM
+   By task: Histogram Aggregate Health
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.AGGREGATE_HEALTH_SCORE
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Frequency of Specific Score" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "Aggregate Health Score" )
+
+
+;
+TITLE;
+TITLE1 "Histogram for AGGREGATE_HEALTH_SCORE";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 AGGREGATE_HEALTH_SCORE
+ /
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=FREQ
+	OUTSIDE=FREQ
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Histogram Perceived Health   */
+%LET _CLIENTTASKLABEL='Histogram Perceived Health';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:20 PM
+   By task: Histogram Perceived Health
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.AGGREGATE_PERCEIVED_HEALTH
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Frequency of Specific Value" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "Aggregate Perceived Health Score" )
+
+
+;
+TITLE;
+TITLE1 "Histogram for AGGREGATE_PERCEIVED_HEALTH";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 AGGREGATE_PERCEIVED_HEALTH
+ /
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=FREQ
+	OUTSIDE=FREQ
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: MRI grouped by Sex   */
+%LET _CLIENTTASKLABEL='MRI grouped by Sex';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:21 PM
+   By task: MRI grouped by Sex
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.MRI_RECODED, T.SEX
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive MRI, 1 = received MRI" )
+
+
+;
+Axis3
+
+	LABEL=( "1 = Male, 2 = Female" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for MRI_RECODED grouped by SEX";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 MRI_RECODED
+ /
+	GROUP=SEX
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: MRI grouped by Region   */
+%LET _CLIENTTASKLABEL='MRI grouped by Region';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:22 PM
+   By task: MRI grouped by Region
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.MRI_RECODED, T.REGION12
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive MRI, 1 = received MRI" )
+
+
+;
+Axis3
+
+	LABEL=( "1 = Northeast, 2 = Midwest, 3 = South, 4 = West" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for MRI_RECODED grouped by REGION12";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 MRI_RECODED
+ /
+	GROUP=REGION12
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: MRI grouped by Race   */
+%LET _CLIENTTASKLABEL='MRI grouped by Race';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:22 PM
+   By task: MRI grouped by Race
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.MRI_RECODED, T.RACETHX
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive MRI, 1 = received MRI" )
+
+
+;
+Axis3
+
+	LABEL=( "Race" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for MRI_RECODED grouped by RACETHX";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 MRI_RECODED
+ /
+	GROUP=RACETHX
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: MRI grouped by Maritul Status   */
+%LET _CLIENTTASKLABEL='MRI grouped by Maritul Status';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:23 PM
+   By task: MRI grouped by Maritul Status
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.MRI_RECODED, T.CATEGORICAL_MARITAL_STATUS
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive MRI, 1 = received MRI" )
+
+
+;
+Axis3
+
+	LABEL=( "0 = Not Married, 1 = Married" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for MRI_RECODED grouped by CATEGORICAL_MARITAL_STATUS";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 MRI_RECODED
+ /
+	GROUP=CATEGORICAL_MARITAL_STATUS
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: MRI grouped by education   */
+%LET _CLIENTTASKLABEL='MRI grouped by education';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:24 PM
+   By task: MRI grouped by education
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.MRI_RECODED, T.CATEGORICAL_EDUCATION
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive MRI, 1 = received MRI" )
+
+
+;
+Axis3
+
+	LABEL=( "Education Level" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for MRI_RECODED grouped by CATEGORICAL_EDUCATION";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 MRI_RECODED
+ /
+	GROUP=CATEGORICAL_EDUCATION
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: MRI grouped by Age   */
+%LET _CLIENTTASKLABEL='MRI grouped by Age';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:25 PM
+   By task: MRI grouped by Age
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.MRI_RECODED, T.CATEGORICAL_AGE
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive MRI, 1 = received MRI" )
+
+
+;
+Axis3
+
+	LABEL=( "Age Category" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for MRI_RECODED grouped by CATEGORICAL_AGE";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 MRI_RECODED
+ /
+	GROUP=CATEGORICAL_AGE
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: X-ray grouped by Sex   */
+%LET _CLIENTTASKLABEL='X-ray grouped by Sex';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:26 PM
+   By task: X-ray grouped by Sex
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.XRAY_RECODED, T.SEX
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive X-ray, 1 = received X-ray" )
+
+
+;
+Axis3
+
+	LABEL=( "1 = Male, 2 = Female" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for XRAY_RECODED grouped by SEX";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 XRAY_RECODED
+ /
+	GROUP=SEX
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: X-ray grouped by Region   */
+%LET _CLIENTTASKLABEL='X-ray grouped by Region';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:27 PM
+   By task: X-ray grouped by Region
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.XRAY_RECODED, T.REGION12
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive X-ray, 1 = received X-ray" )
+
+
+;
+Axis3
+
+	LABEL=( "1 = Northeast, 2 = Midwest, 3 = South, 4 = West" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for XRAY_RECODED grouped by REGION12";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 XRAY_RECODED
+ /
+	GROUP=REGION12
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: X-ray grouped by Race   */
+%LET _CLIENTTASKLABEL='X-ray grouped by Race';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:28 PM
+   By task: X-ray grouped by Race
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.XRAY_RECODED, T.RACETHX
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive X-ray, 1 = received X-ray" )
+
+
+;
+Axis3
+
+	LABEL=( "Race" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for XRAY_RECODED grouped by RACETHX";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 XRAY_RECODED
+ /
+	GROUP=RACETHX
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: X-ray grouped by Maritul Status   */
+%LET _CLIENTTASKLABEL='X-ray grouped by Maritul Status';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:29 PM
+   By task: X-ray grouped by Maritul Status
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.XRAY_RECODED, T.CATEGORICAL_MARITAL_STATUS
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive X-ray, 1 = received X-ray" )
+
+
+;
+Axis3
+
+	LABEL=( "0 = Not Married, 1 = Married" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for XRAY_RECODED grouped by CATGORICAL_MARITAL_STATUS";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 XRAY_RECODED
+ /
+	GROUP=CATEGORICAL_MARITAL_STATUS
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: X-ray grouped by education   */
+%LET _CLIENTTASKLABEL='X-ray grouped by education';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:30 PM
+   By task: X-ray grouped by education
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.XRAY_RECODED, T.CATEGORICAL_EDUCATION
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive X-ray, 1 = received X-ray" )
+
+
+;
+Axis3
+
+	LABEL=( "Education Level" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for XRAY_RECODED grouped by CATEGORICAL_EDUCATION";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 XRAY_RECODED
+ /
+	GROUP=CATEGORICAL_EDUCATION
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: X-ray grouped by Age   */
+%LET _CLIENTTASKLABEL='X-ray grouped by Age';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:30 PM
+   By task: X-ray grouped by Age
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.XRAY_RECODED, T.CATEGORICAL_AGE
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
+;
+QUIT;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive X-ray, 1 = received X-ray" )
+
+
+;
+Axis3
+
+	LABEL=( "Age Category" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for XRAY_RECODED grouped by CATEGORICAL_AGE";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR 
+	 XRAY_RECODED
+ /
+	GROUP=CATEGORICAL_AGE
+	CLIPREF
+FRAME	DISCRETE
+	TYPE=PCT
+	OUTSIDE=PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Scatter Plot for AGE12X and BMINDX53   */
+%LET _CLIENTTASKLABEL='Scatter Plot for AGE12X and BMINDX53';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:31 PM
+   By task: Scatter Plot for AGE12X and BMINDX53
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   ------------------------------------------------------------------- */
+
+PROC SQL;
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.AGE12X, T.BMINDX53
+	FROM ECLIB000.meps_fullyr_er_merged_final_3(FIRSTOBS=1 ) as T
+;
+QUIT;
+	SYMBOL1
+	INTERPOL=NONE
+	HEIGHT=10pt
+	VALUE=CIRCLE
+	LINE=1
+	WIDTH=2
+
+	CV = _STYLE_
+;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR=NONE
+	LABEL=(   "Body Mass Index")
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	MINOR=NONE
+	LABEL=(   "Age")
+
+
+;
+TITLE;
+TITLE1 "Scatter Plot for AGE12X and BMINDX53";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GPLOT DATA=WORK.SORTTempTableSorted
+;
+PLOT BMINDX53 * AGE12X / 
+	VAXIS=AXIS1
+
+	HAXIS=AXIS2
+
+FRAME ;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+GOPTIONS RESET = SYMBOL;
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: One-Way Frequencies on BMINDX53   */
+%LET _CLIENTTASKLABEL='One-Way Frequencies on BMINDX53';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:32 PM
+   By task: One-Way Frequencies on BMINDX53
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
    Server:  Local
    ------------------------------------------------------------------- */
 
 %_eg_conditional_dropds(WORK.SORT);
 /* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_MERGED_
+   Sort data set P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
    ------------------------------------------------------------------- */
 
 PROC SQL;
 	CREATE VIEW WORK.SORT AS
-		SELECT T.AGE12X, T.SEX, T.MRI_RECODED, T.XRAY_RECODED
-	FROM WORK.QUERY_FOR_MEPS_FULLYR_ER_MERGED_ as T
+		SELECT T.BMINDX53
+	FROM ECLIB000.meps_fullyr_er_merged_final_3 as T
 ;
 QUIT;
 
@@ -1054,10 +2439,7 @@ FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSY
 PROC FREQ DATA=WORK.SORT
 	ORDER=INTERNAL
 ;
-	TABLES AGE12X / MISSPRINT  SCORES=TABLE;
-	TABLES SEX / MISSPRINT  SCORES=TABLE;
-	TABLES MRI_RECODED / MISSPRINT  SCORES=TABLE;
-	TABLES XRAY_RECODED / MISSPRINT  SCORES=TABLE;
+	TABLES BMINDX53 / MISSPRINT  SCORES=TABLE;
 RUN;
 /* -------------------------------------------------------------------
    End of task code.
@@ -1073,1448 +2455,19 @@ GOPTIONS NOACCESSIBLE;
 %LET _CLIENTPROJECTNAME=;
 
 
-/*   START OF NODE: Generate categorical age variable   */
-%LET _CLIENTTASKLABEL='Generate categorical age variable';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
+/*   START OF NODE: Filter BMINDX53   */
+LIBNAME EC100093 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+
+%LET _CLIENTTASKLABEL='Filter BMINDX53';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
 
 GOPTIONS ACCESSIBLE;
-%_eg_conditional_dropds(WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000);
+%_eg_conditional_dropds(WORK.QUERY_FOR_MEPS_FULLYR_ER_MERGED_);
 
 PROC SQL;
-   CREATE TABLE WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000 AS 
-   SELECT t1.DUPERSID, 
-          t1.NUMBER_ER_VISITS, 
-          t1.CATEGORICAL_ER_VISITS, 
-          t1.COUNT_of_DUPERSID, 
-          t1.INFULLYR, 
-          t1.DUPERSID1, 
-          t1.AGE12X, 
-          t1.SEX, 
-          t1.REGION12, 
-          t1.RACETHX, 
-          t1.MARRY12X, 
-          t1.EDUCYR, 
-          t1.EDUYRDEG, 
-          t1.EMPST31, 
-          t1.EMPST42, 
-          t1.EMPST53, 
-          t1.SAQELIG, 
-          t1.ADPRX42, 
-          t1.EDRECODE, 
-          t1.ADILCR42, 
-          t1.EDRECODE_RECODED, 
-          t1.ADILWW42, 
-          t1.ADRTCR42, 
-          t1.ADRTWW42, 
-          t1.ADAPPT42, 
-          t1.ADNDCR42, 
-          t1.ADEGMC42, 
-          t1.ADLIST42, 
-          t1.ADEXPL42, 
-          t1.ADRESP42, 
-          t1.ADPRTM42, 
-          t1.ADINST42, 
-          t1.ADEZUN42, 
-          t1.ADTLHW42, 
-          t1.ADFFRM42, 
-          t1.ADFHLP42, 
-          t1.ADHECR42, 
-          t1.ADSMOK42, 
-          t1.ADNSMK42, 
-          t1.ADDRBP42, 
-          t1.ADSPEC42, 
-          t1.ADSPRF42, 
-          t1.ADGENH42, 
-          t1.ADDAYA42, 
-          t1.ADCLIM42, 
-          t1.ADPALS42, 
-          t1.ADPWLM42, 
-          t1.ADMALS42, 
-          t1.ADMWLM42, 
-          t1.ADPAIN42, 
-          t1.ADCAPE42, 
-          t1.ADNRGY42, 
-          t1.ADDOWN42, 
-          t1.ADSOCA42, 
-          t1.PCS42, 
-          t1.MCS42, 
-          t1.SFFLAG42, 
-          t1.ADNERV42, 
-          t1.ADHOPE42, 
-          t1.ADREST42, 
-          t1.ADSAD42, 
-          t1.ADEFRT42, 
-          t1.ADWRTH42, 
-          t1.K6SUM42, 
-          t1.ADINTR42, 
-          t1.ADDPRS42, 
-          t1.PHQ242, 
-          t1.ADINSA42, 
-          t1.ADINSB42, 
-          t1.ADRISK42, 
-          t1.ADOVER42, 
-          t1.ADCMPM42, 
-          t1.ADCMPD42, 
-          t1.ADCMPY42, 
-          t1.ADLANG42, 
-          t1.SAQWT12F, 
-          t1.FAMS1231, 
-          t1.PROXY12, 
-          t1.INTVLANG, 
-          t1.ELGRND12, 
-          t1.RTHLTH31, 
-          t1.RTHLTH42, 
-          t1.RTHLTH53, 
-          t1.MNHLTH31, 
-          t1.MNHLTH42, 
-          t1.MNHLTH53, 
-          t1.HIBPDX, 
-          t1.CHDDX, 
-          t1.ANGIDX, 
-          t1.MIDX, 
-          t1.OHRTDX, 
-          t1.STRKDX, 
-          t1.EMPHDX, 
-          t1.CHOLDX, 
-          t1.CANCERDX, 
-          t1.DIABDX, 
-          t1.ARTHDX, 
-          t1.ASTHDX, 
-          t1.PREGNT31, 
-          t1.PREGNT42, 
-          t1.PREGNT53, 
-          t1.BMINDX53, 
-          t1.LANGHM42, 
-          t1.ENGCMF42, 
-          t1.ENGSPK42, 
-          t1.USBORN42, 
-          t1.USLIVE42, 
-          t1.HAVEUS42, 
-          t1.YNOUSC42, 
-          t1.PROVTY42, 
-          t1.PLCTYP42, 
-          t1.TYPEPE42, 
-          t1.LANGPR42, 
-          t1.MDUNAB42, 
-          t1.DPOTSD12, 
-          t1.TTLP12X, 
-          t1.FAMINC12, 
-          t1.POVCAT12, 
-          t1.POVLEV12, 
-          t1.UNINS12, 
-          t1.INSCOV12, 
-          t1.INSURC12, 
-          t1.TRIST12X, 
-          t1.TRIPR12X, 
-          t1.TRIEX12X, 
-          t1.TRILI12X, 
-          t1.TRICH12X, 
-          t1.MCRPD12, 
-          t1.MCRPD12X, 
-          t1.MCRPB12, 
-          t1.MCRPHO12, 
-          t1.MCDHMO12, 
-          t1.MCDMC12, 
-          t1.PRVHMO12, 
-          t1.PRVMNC12, 
-          t1.PRVDRL12, 
-          t1.PHMONP12, 
-          t1.PMNCNP12, 
-          t1.PRDRNP12, 
-          t1.TRICR12X, 
-          t1.TRIAT12X, 
-          t1.MCAID12, 
-          t1.MCAID12X, 
-          t1.MCARE12, 
-          t1.MCARE12X, 
-          t1.MCDAT12X, 
-          t1.OTPAAT12, 
-          t1.OTPBAT12, 
-          t1.OTPUBA12, 
-          t1.OTPUBB12, 
-          t1.PRIDK12, 
-          t1.PRIEU12, 
-          t1.PRING12, 
-          t1.PRIOG12, 
-          t1.PRIS12, 
-          t1.PRIV12, 
-          t1.PRIVAT12, 
-          t1.PROUT12, 
-          t1.PUB12X, 
-          t1.PUBAT12X, 
-          t1.INS12X, 
-          t1.INSAT12X, 
-          t1.STAPR12, 
-          t1.STPRAT12, 
-          t1.DNTINS12, 
-          t1.PMDINS12, 
-          t1.PMEDUP31, 
-          t1.PMEDUP42, 
-          t1.PMEDUP53, 
-          t1.PMEDPY31, 
-          t1.PMEDPY42, 
-          t1.PMEDPY53, 
-          t1.PMEDPP31, 
-          t1.PMEDPP42, 
-          t1.PMEDPP53, 
-          t1.TOTTCH12, 
-          t1.TOTEXP12, 
-          t1.TOTSLF12, 
-          t1.TOTMCR12, 
-          t1.TOTMCD12, 
-          t1.TOTPRV12, 
-          t1.TOTVA12, 
-          t1.TOTTRI12, 
-          t1.TOTOFD12, 
-          t1.TOTSTL12, 
-          t1.TOTWCP12, 
-          t1.TOTOPR12, 
-          t1.TOTOPU12, 
-          t1.TOTOSR12, 
-          t1.TOTPTR12, 
-          t1.TOTOTH12, 
-          t1.ERTOT12, 
-          t1.IPZERO12, 
-          t1.IPDIS12, 
-          t1.IPNGTD12, 
-          t1.RXTOT12, 
-          t1.PERWT12F, 
-          t1.HEALTH_GENERAL, 
-          t1.HEALTH_LIMITS_ACTIVITY, 
-          t1.HEALTH_LIMITS_STAIRS, 
-          t1.ACCOMPLISH_PHYSICAL_PROBLEMS, 
-          t1.WORK_LIMIT_PHYSICAL_PROBLEMS, 
-          t1.ACCOMPLISH_MENTAL_PROBLEMS, 
-          t1.WORK_LIMIT_MENTAL_PROBLEMS, 
-          t1.PAIN_LIMIT_WORK, 
-          t1.CALM, 
-          t1.ENERGY, 
-          t1.DEPRESSED, 
-          t1.HEALTH_SOCIAL, 
-          t1.EDUCYR_RECODED, 
-          t1.EDUYRDEG_RECODED, 
-          t1.MARITAL_STATUS, 
-          t1.EMPLOY_STATUS_31, 
-          t1.EMPLOY_STATUS_42, 
-          t1.EMPLOY_STATUS_53, 
-          t1.NOT_NEED_H_INSURANCE, 
-          t1.HEALTH_WORTH_COST, 
-          t1.LIKELY_RISK, 
-          t1.ILLS_NO_HELP, 
-          t1.SAQINTERVIEW_LANG, 
-          t1.SPEC_REFERRAL, 
-          t1.SEE_SPECIALIST, 
-          t1.CHECK_BLOOD_PRESSURE, 
-          t1.SMOKE, 
-          t1.RATE_HEALTH_CARE, 
-          t1.PERC_HEALTH_31, 
-          t1.PERC_HEALTH_42, 
-          t1.PERC_HEALTH_53, 
-          t1.BMINDX_RECODED, 
-          t1.ENGSPK_RECODED, 
-          t1.PLCTYP_RECODED, 
-          t1.TYPEPE_RECODED, 
-          t1.PROVIDER_TYPE, 
-          t1.HAVE_USC, 
-          t1.WHY_NO_USC, 
-          t1.HEALTH_GENERAL_REVERSED, 
-          t1.PAIN_LIMIT_WORK_REVERSED, 
-          t1.CALM_REVERSED, 
-          t1.ENERGY_REVERSED, 
-          t1.PERC_HEALTH_31_REVERSED, 
-          t1.PERC_HEALTH_42_REVERSED, 
-          t1.PERC_HEALTH_53_REVERSED, 
-          t1.AGGREGATE_HEALTH_SCORE, 
-          t1.AGGREGATE_PERCEIVED_HEALTH, 
-          t1.CATEGORICAL_AGGREGATE_HEALTH, 
-          t1.CATEGORICAL_EDUCATION, 
-          t1.CATEGORICAL_PERCEIVED_HEALTH, 
-          t1.INER, 
-          t1.DUID, 
-          t1.PID, 
-          t1.DUPERSID11, 
-          t1.EVNTIDX, 
-          t1.EVENTRN, 
-          t1.ERHEVIDX, 
-          t1.FFEEIDX, 
-          t1.PANEL, 
-          t1.MPCDATA, 
-          t1.ERDATEYR, 
-          t1.ERDATEMM, 
-          t1.ERDATEDD, 
-          t1.SEEDOC, 
-          t1.VSTCTGRY, 
-          t1.VSTRELCN, 
-          t1.LABTEST, 
-          t1.SONOGRAM, 
-          t1.XRAYS, 
-          t1.MAMMOG, 
-          t1.MRI, 
-          t1.EKG, 
-          t1.EEG, 
-          t1.RCVVAC, 
-          t1.ANESTH, 
-          t1.THRTSWAB, 
-          t1.OTHSVCE, 
-          t1.SURGPROC, 
-          t1.MEDPRESC, 
-          t1.ERICD1X, 
-          t1.ERICD2X, 
-          t1.ERICD3X, 
-          t1.ERPRO1X, 
-          t1.ERCCC1X, 
-          t1.ERCCC2X, 
-          t1.ERCCC3X, 
-          t1.FFERTYPE, 
-          t1.FFBEF12, 
-          t1.ERXP12X, 
-          t1.ERTC12X, 
-          t1.ERFSF12X, 
-          t1.ERFMR12X, 
-          t1.ERFMD12X, 
-          t1.ERFPV12X, 
-          t1.ERFVA12X, 
-          t1.ERFTR12X, 
-          t1.ERFOF12X, 
-          t1.ERFSL12X, 
-          t1.ERFWC12X, 
-          t1.ERFOR12X, 
-          t1.ERFOU12X, 
-          t1.ERFOT12X, 
-          t1.ERFXP12X, 
-          t1.ERFTC12X, 
-          t1.ERDSF12X, 
-          t1.ERDMR12X, 
-          t1.ERDMD12X, 
-          t1.ERDPV12X, 
-          t1.ERDVA12X, 
-          t1.ERDTR12X, 
-          t1.ERDOF12X, 
-          t1.ERDSL12X, 
-          t1.ERDWC12X, 
-          t1.ERDOR12X, 
-          t1.ERDOU12X, 
-          t1.ERDOT12X, 
-          t1.ERDXP12X, 
-          t1.ERDTC12X, 
-          t1.IMPFLAG, 
-          t1.PERWT12F1, 
-          t1.VARSTR, 
-          t1.VARPSU, 
-          t1.XRAY_RECODED, 
-          t1.MRI_RECODED, 
-          t1.CATEGORICAL_MARITAL_STATUS, 
-          /* CATEGORICAL_AGE */
-            (CASE  
-               WHEN AGE12X >= 18 and AGE12X <=30
-               THEN 1
-            WHEN AGE12X >= 31 and AGE12X <=40
-               THEN 2
-            WHEN AGE12X >= 41 and AGE12X <=55
-               THEN 3
-            WHEN AGE12X >= 56 and AGE12X <=70
-               THEN 4
-            WHEN AGE12X > 70
-               THEN 5
-               ELSE .
-            END) LABEL="Categorizes AGE12X" AS CATEGORICAL_AGE
-      FROM WORK.QUERY_FOR_MEPS_FULLYR_ER_MERGED_ t1;
-QUIT;
-
-GOPTIONS NOACCESSIBLE;
-
-
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: One-Way Frequencies9   */
-%LET _CLIENTTASKLABEL='One-Way Frequencies9';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Thursday, January 15, 2015 at 2:16:47 PM
-   By task: One-Way Frequencies9
-
-   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORT);
-/* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   ------------------------------------------------------------------- */
-
-PROC SQL;
-	CREATE VIEW WORK.SORT AS
-		SELECT T.CATEGORICAL_AGGREGATE_HEALTH
-	FROM WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000 as T
-;
-QUIT;
-
-TITLE;
-TITLE1 "One-Way Frequencies for CATEGORICAL_AGGREGATE_HEALTH";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA=WORK.SORT
-	ORDER=INTERNAL
-;
-	TABLES CATEGORICAL_AGGREGATE_HEALTH / MISSPRINT  SCORES=TABLE;
-RUN;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORT);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-
-
-/*   START OF NODE: One-Way Frequencies1   */
-%LET _CLIENTTASKLABEL='One-Way Frequencies1';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-DATA _NULL_;
-CALL SYMPUT("GroupingPrompt",'SEX');
-RUN;
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Thursday, January 15, 2015 at 2:16:47 PM
-   By task: One-Way Frequencies1
-
-   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORT);
-/* -------------------------------------------------------------------
-   Sort data set WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   ------------------------------------------------------------------- */
-PROC SORT
-	DATA=WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000(KEEP=MRI_RECODED XRAY_RECODED "&GroupingPrompt"n)
-	OUT=WORK.SORT
-	;
-	BY "&GroupingPrompt"n;
-RUN;
-
-TITLE;
-TITLE1 "One-Way Frequencies for MRI and XRAY grouped by &GroupingPrompt";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA=WORK.SORT
-	ORDER=INTERNAL
-;
-	TABLES MRI_RECODED / MISSPRINT  SCORES=TABLE;
-	TABLES XRAY_RECODED / MISSPRINT  SCORES=TABLE;
-	BY "&GroupingPrompt"n;
-RUN;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORT);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-%SYMDEL GroupingPrompt;
-
-
-/*   START OF NODE: One-Way Frequencies2   */
-%LET _CLIENTTASKLABEL='One-Way Frequencies2';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-DATA _NULL_;
-CALL SYMPUT("GroupingPrompt",'SEX');
-RUN;
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Thursday, January 15, 2015 at 2:16:47 PM
-   By task: One-Way Frequencies2
-
-   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORT);
-/* -------------------------------------------------------------------
-   Sort data set WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   ------------------------------------------------------------------- */
-PROC SORT
-	DATA=WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000(KEEP=MRI_RECODED XRAY_RECODED "&GroupingPrompt"n)
-	OUT=WORK.SORT
-	;
-	BY "&GroupingPrompt"n;
-RUN;
-
-TITLE;
-TITLE1 "One-Way Frequencies for MRI and XRAY grouped by &GroupingPrompt";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA=WORK.SORT
-	ORDER=INTERNAL
-;
-	TABLES MRI_RECODED / MISSPRINT  SCORES=TABLE;
-	TABLES XRAY_RECODED / MISSPRINT  SCORES=TABLE;
-	BY "&GroupingPrompt"n;
-RUN;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORT);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-%SYMDEL GroupingPrompt;
-
-
-/*   START OF NODE: One-Way Frequencies3   */
-%LET _CLIENTTASKLABEL='One-Way Frequencies3';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-DATA _NULL_;
-CALL SYMPUT("GroupingPrompt",'SEX');
-RUN;
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Thursday, January 15, 2015 at 2:16:48 PM
-   By task: One-Way Frequencies3
-
-   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORT);
-/* -------------------------------------------------------------------
-   Sort data set WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   ------------------------------------------------------------------- */
-PROC SORT
-	DATA=WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000(KEEP=MRI_RECODED XRAY_RECODED "&GroupingPrompt"n)
-	OUT=WORK.SORT
-	;
-	BY "&GroupingPrompt"n;
-RUN;
-
-TITLE;
-TITLE1 "One-Way Frequencies for MRI and XRAY grouped by &GroupingPrompt";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA=WORK.SORT
-	ORDER=INTERNAL
-;
-	TABLES MRI_RECODED / MISSPRINT  SCORES=TABLE;
-	TABLES XRAY_RECODED / MISSPRINT  SCORES=TABLE;
-	BY "&GroupingPrompt"n;
-RUN;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORT);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-%SYMDEL GroupingPrompt;
-
-
-/*   START OF NODE: One-Way Frequencies4   */
-%LET _CLIENTTASKLABEL='One-Way Frequencies4';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-DATA _NULL_;
-CALL SYMPUT("GroupingPrompt",'SEX');
-RUN;
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Thursday, January 15, 2015 at 2:16:48 PM
-   By task: One-Way Frequencies4
-
-   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORT);
-/* -------------------------------------------------------------------
-   Sort data set WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   ------------------------------------------------------------------- */
-PROC SORT
-	DATA=WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000(KEEP=MRI_RECODED XRAY_RECODED "&GroupingPrompt"n)
-	OUT=WORK.SORT
-	;
-	BY "&GroupingPrompt"n;
-RUN;
-
-TITLE;
-TITLE1 "One-Way Frequencies for MRI and XRAY grouped by &GroupingPrompt";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA=WORK.SORT
-	ORDER=INTERNAL
-;
-	TABLES MRI_RECODED / MISSPRINT  SCORES=TABLE;
-	TABLES XRAY_RECODED / MISSPRINT  SCORES=TABLE;
-	BY "&GroupingPrompt"n;
-RUN;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORT);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-%SYMDEL GroupingPrompt;
-
-
-/*   START OF NODE: One-Way Frequencies5   */
-%LET _CLIENTTASKLABEL='One-Way Frequencies5';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-DATA _NULL_;
-CALL SYMPUT("GroupingPrompt",'SEX');
-RUN;
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Thursday, January 15, 2015 at 2:16:49 PM
-   By task: One-Way Frequencies5
-
-   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORT);
-/* -------------------------------------------------------------------
-   Sort data set WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   ------------------------------------------------------------------- */
-PROC SORT
-	DATA=WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000(KEEP=MRI_RECODED XRAY_RECODED "&GroupingPrompt"n)
-	OUT=WORK.SORT
-	;
-	BY "&GroupingPrompt"n;
-RUN;
-
-TITLE;
-TITLE1 "One-Way Frequencies for MRI and XRAY grouped by &GroupingPrompt";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA=WORK.SORT
-	ORDER=INTERNAL
-;
-	TABLES MRI_RECODED / MISSPRINT  SCORES=TABLE;
-	TABLES XRAY_RECODED / MISSPRINT  SCORES=TABLE;
-	BY "&GroupingPrompt"n;
-RUN;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORT);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-%SYMDEL GroupingPrompt;
-
-
-/*   START OF NODE: One-Way Frequencies6   */
-%LET _CLIENTTASKLABEL='One-Way Frequencies6';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-DATA _NULL_;
-CALL SYMPUT("GroupingPrompt",'SEX');
-RUN;
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Thursday, January 15, 2015 at 2:16:49 PM
-   By task: One-Way Frequencies6
-
-   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORT);
-/* -------------------------------------------------------------------
-   Sort data set WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   ------------------------------------------------------------------- */
-PROC SORT
-	DATA=WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000(KEEP=MRI_RECODED XRAY_RECODED "&GroupingPrompt"n)
-	OUT=WORK.SORT
-	;
-	BY "&GroupingPrompt"n;
-RUN;
-
-TITLE;
-TITLE1 "One-Way Frequencies for MRI and XRAY grouped by &GroupingPrompt";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA=WORK.SORT
-	ORDER=INTERNAL
-;
-	TABLES MRI_RECODED / MISSPRINT  SCORES=TABLE;
-	TABLES XRAY_RECODED / MISSPRINT  SCORES=TABLE;
-	BY "&GroupingPrompt"n;
-RUN;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORT);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-%SYMDEL GroupingPrompt;
-
-
-/*   START OF NODE: One-Way Frequencies7   */
-%LET _CLIENTTASKLABEL='One-Way Frequencies7';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-DATA _NULL_;
-CALL SYMPUT("GroupingPrompt",'SEX');
-RUN;
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Thursday, January 15, 2015 at 2:16:49 PM
-   By task: One-Way Frequencies7
-
-   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORT);
-/* -------------------------------------------------------------------
-   Sort data set WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   ------------------------------------------------------------------- */
-PROC SORT
-	DATA=WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000(KEEP=MRI_RECODED XRAY_RECODED "&GroupingPrompt"n)
-	OUT=WORK.SORT
-	;
-	BY "&GroupingPrompt"n;
-RUN;
-
-TITLE;
-TITLE1 "One-Way Frequencies for MRI and XRAY grouped by &GroupingPrompt";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA=WORK.SORT
-	ORDER=INTERNAL
-;
-	TABLES MRI_RECODED / MISSPRINT  SCORES=TABLE;
-	TABLES XRAY_RECODED / MISSPRINT  SCORES=TABLE;
-	BY "&GroupingPrompt"n;
-RUN;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORT);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-%SYMDEL GroupingPrompt;
-
-
-/*   START OF NODE: Summary Statistics   */
-%LET _CLIENTTASKLABEL='Summary Statistics';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-DATA _NULL_;
-CALL SYMPUT("GroupingPrompt",'SEX');
-RUN;
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Thursday, January 15, 2015 at 2:16:50 PM
-   By task: Summary Statistics
-
-   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   ------------------------------------------------------------------- */
-PROC SORT
-	DATA=WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000(FIRSTOBS=1  KEEP=AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS "&GroupingPrompt"n)
-	OUT=WORK.SORTTempTableSorted
-	;
-	BY "&GroupingPrompt"n;
-RUN;
-/* -------------------------------------------------------------------
-   Run the Means Procedure
-   ------------------------------------------------------------------- */
-TITLE;
-TITLE1 "Summary Statistics";
-TITLE2 "Results by &GroupingPrompt";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC MEANS DATA=WORK.SORTTempTableSorted
-	FW=12
-	PRINTALLTYPES
-	CHARTYPE
-	NOLABELS
-	QMETHOD=OS
-	VARDEF=DF 	
-		MEAN 
-		STD 
-		MIN 
-		MAX 
-		MODE 
-		N 
-		NMISS	
-		Q1 
-		MEDIAN 
-		Q3	;
-	VAR AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS;
-	BY "&GroupingPrompt"n;
-
-RUN;
-ODS GRAPHICS ON;
-TITLE;
-/*-----------------------------------------------------
- * Use PROC UNIVARIATE to generate the histograms.
- */
-
-TITLE;
-TITLE1 "Summary Statistics";
-TITLE2 "Histograms by &GroupingPrompt";
-PROC UNIVARIATE DATA=WORK.SORTTempTableSorted	NOPRINT	;
-	VAR AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS;
-
-		BY "&GroupingPrompt"n;
-	HISTOGRAM ;
-
-RUN; QUIT;
-ODS GRAPHICS OFF;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-%SYMDEL GroupingPrompt;
-
-
-/*   START OF NODE: Summary Statistics   */
-%LET _CLIENTTASKLABEL='Summary Statistics';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-DATA _NULL_;
-CALL SYMPUT("GroupingPrompt",'SEX');
-RUN;
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Thursday, January 15, 2015 at 2:16:50 PM
-   By task: Summary Statistics
-
-   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   ------------------------------------------------------------------- */
-PROC SORT
-	DATA=WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000(FIRSTOBS=1  KEEP=AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS "&GroupingPrompt"n)
-	OUT=WORK.SORTTempTableSorted
-	;
-	BY "&GroupingPrompt"n;
-RUN;
-/* -------------------------------------------------------------------
-   Run the Means Procedure
-   ------------------------------------------------------------------- */
-TITLE;
-TITLE1 "Summary Statistics";
-TITLE2 "Results by &GroupingPrompt";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC MEANS DATA=WORK.SORTTempTableSorted
-	FW=12
-	PRINTALLTYPES
-	CHARTYPE
-	NOLABELS
-	QMETHOD=OS
-	VARDEF=DF 	
-		MEAN 
-		STD 
-		MIN 
-		MAX 
-		MODE 
-		N 
-		NMISS	
-		Q1 
-		MEDIAN 
-		Q3	;
-	VAR AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS;
-	BY "&GroupingPrompt"n;
-
-RUN;
-ODS GRAPHICS ON;
-TITLE;
-/*-----------------------------------------------------
- * Use PROC UNIVARIATE to generate the histograms.
- */
-
-TITLE;
-TITLE1 "Summary Statistics";
-TITLE2 "Histograms by &GroupingPrompt";
-PROC UNIVARIATE DATA=WORK.SORTTempTableSorted	NOPRINT	;
-	VAR AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS;
-
-		BY "&GroupingPrompt"n;
-	HISTOGRAM ;
-
-RUN; QUIT;
-ODS GRAPHICS OFF;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-%SYMDEL GroupingPrompt;
-
-
-/*   START OF NODE: Summary Statistics   */
-%LET _CLIENTTASKLABEL='Summary Statistics';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-DATA _NULL_;
-CALL SYMPUT("GroupingPrompt",'SEX');
-RUN;
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Thursday, January 15, 2015 at 2:16:50 PM
-   By task: Summary Statistics
-
-   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   ------------------------------------------------------------------- */
-PROC SORT
-	DATA=WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000(FIRSTOBS=1  KEEP=AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS "&GroupingPrompt"n)
-	OUT=WORK.SORTTempTableSorted
-	;
-	BY "&GroupingPrompt"n;
-RUN;
-/* -------------------------------------------------------------------
-   Run the Means Procedure
-   ------------------------------------------------------------------- */
-TITLE;
-TITLE1 "Summary Statistics";
-TITLE2 "Results by &GroupingPrompt";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC MEANS DATA=WORK.SORTTempTableSorted
-	FW=12
-	PRINTALLTYPES
-	CHARTYPE
-	NOLABELS
-	QMETHOD=OS
-	VARDEF=DF 	
-		MEAN 
-		STD 
-		MIN 
-		MAX 
-		MODE 
-		N 
-		NMISS	
-		Q1 
-		MEDIAN 
-		Q3	;
-	VAR AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS;
-	BY "&GroupingPrompt"n;
-
-RUN;
-ODS GRAPHICS ON;
-TITLE;
-/*-----------------------------------------------------
- * Use PROC UNIVARIATE to generate the histograms.
- */
-
-TITLE;
-TITLE1 "Summary Statistics";
-TITLE2 "Histograms by &GroupingPrompt";
-PROC UNIVARIATE DATA=WORK.SORTTempTableSorted	NOPRINT	;
-	VAR AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS;
-
-		BY "&GroupingPrompt"n;
-	HISTOGRAM ;
-
-RUN; QUIT;
-ODS GRAPHICS OFF;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-%SYMDEL GroupingPrompt;
-
-
-/*   START OF NODE: Summary Statistics   */
-%LET _CLIENTTASKLABEL='Summary Statistics';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-DATA _NULL_;
-CALL SYMPUT("GroupingPrompt",'SEX');
-RUN;
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Thursday, January 15, 2015 at 2:16:51 PM
-   By task: Summary Statistics
-
-   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   ------------------------------------------------------------------- */
-PROC SORT
-	DATA=WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000(FIRSTOBS=1  KEEP=AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS "&GroupingPrompt"n)
-	OUT=WORK.SORTTempTableSorted
-	;
-	BY "&GroupingPrompt"n;
-RUN;
-/* -------------------------------------------------------------------
-   Run the Means Procedure
-   ------------------------------------------------------------------- */
-TITLE;
-TITLE1 "Summary Statistics";
-TITLE2 "Results by &GroupingPrompt";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC MEANS DATA=WORK.SORTTempTableSorted
-	FW=12
-	PRINTALLTYPES
-	CHARTYPE
-	NOLABELS
-	QMETHOD=OS
-	VARDEF=DF 	
-		MEAN 
-		STD 
-		MIN 
-		MAX 
-		MODE 
-		N 
-		NMISS	
-		Q1 
-		MEDIAN 
-		Q3	;
-	VAR AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS;
-	BY "&GroupingPrompt"n;
-
-RUN;
-ODS GRAPHICS ON;
-TITLE;
-/*-----------------------------------------------------
- * Use PROC UNIVARIATE to generate the histograms.
- */
-
-TITLE;
-TITLE1 "Summary Statistics";
-TITLE2 "Histograms by &GroupingPrompt";
-PROC UNIVARIATE DATA=WORK.SORTTempTableSorted	NOPRINT	;
-	VAR AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS;
-
-		BY "&GroupingPrompt"n;
-	HISTOGRAM ;
-
-RUN; QUIT;
-ODS GRAPHICS OFF;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-%SYMDEL GroupingPrompt;
-
-
-/*   START OF NODE: Summary Statistics   */
-%LET _CLIENTTASKLABEL='Summary Statistics';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-DATA _NULL_;
-CALL SYMPUT("GroupingPrompt",'SEX');
-RUN;
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Thursday, January 15, 2015 at 2:16:51 PM
-   By task: Summary Statistics
-
-   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   ------------------------------------------------------------------- */
-PROC SORT
-	DATA=WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000(FIRSTOBS=1  KEEP=AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS "&GroupingPrompt"n)
-	OUT=WORK.SORTTempTableSorted
-	;
-	BY "&GroupingPrompt"n;
-RUN;
-/* -------------------------------------------------------------------
-   Run the Means Procedure
-   ------------------------------------------------------------------- */
-TITLE;
-TITLE1 "Summary Statistics";
-TITLE2 "Results by &GroupingPrompt";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC MEANS DATA=WORK.SORTTempTableSorted
-	FW=12
-	PRINTALLTYPES
-	CHARTYPE
-	NOLABELS
-	QMETHOD=OS
-	VARDEF=DF 	
-		MEAN 
-		STD 
-		MIN 
-		MAX 
-		MODE 
-		N 
-		NMISS	
-		Q1 
-		MEDIAN 
-		Q3	;
-	VAR AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS;
-	BY "&GroupingPrompt"n;
-
-RUN;
-ODS GRAPHICS ON;
-TITLE;
-/*-----------------------------------------------------
- * Use PROC UNIVARIATE to generate the histograms.
- */
-
-TITLE;
-TITLE1 "Summary Statistics";
-TITLE2 "Histograms by &GroupingPrompt";
-PROC UNIVARIATE DATA=WORK.SORTTempTableSorted	NOPRINT	;
-	VAR AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS;
-
-		BY "&GroupingPrompt"n;
-	HISTOGRAM ;
-
-RUN; QUIT;
-ODS GRAPHICS OFF;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-%SYMDEL GroupingPrompt;
-
-
-/*   START OF NODE: Summary Statistics   */
-%LET _CLIENTTASKLABEL='Summary Statistics';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-DATA _NULL_;
-CALL SYMPUT("GroupingPrompt",'SEX');
-RUN;
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Thursday, January 15, 2015 at 2:16:51 PM
-   By task: Summary Statistics
-
-   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   ------------------------------------------------------------------- */
-PROC SORT
-	DATA=WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000(FIRSTOBS=1  KEEP=AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS "&GroupingPrompt"n)
-	OUT=WORK.SORTTempTableSorted
-	;
-	BY "&GroupingPrompt"n;
-RUN;
-/* -------------------------------------------------------------------
-   Run the Means Procedure
-   ------------------------------------------------------------------- */
-TITLE;
-TITLE1 "Summary Statistics";
-TITLE2 "Results by &GroupingPrompt";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC MEANS DATA=WORK.SORTTempTableSorted
-	FW=12
-	PRINTALLTYPES
-	CHARTYPE
-	NOLABELS
-	QMETHOD=OS
-	VARDEF=DF 	
-		MEAN 
-		STD 
-		MIN 
-		MAX 
-		MODE 
-		N 
-		NMISS	
-		Q1 
-		MEDIAN 
-		Q3	;
-	VAR AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS;
-	BY "&GroupingPrompt"n;
-
-RUN;
-ODS GRAPHICS ON;
-TITLE;
-/*-----------------------------------------------------
- * Use PROC UNIVARIATE to generate the histograms.
- */
-
-TITLE;
-TITLE1 "Summary Statistics";
-TITLE2 "Histograms by &GroupingPrompt";
-PROC UNIVARIATE DATA=WORK.SORTTempTableSorted	NOPRINT	;
-	VAR AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS;
-
-		BY "&GroupingPrompt"n;
-	HISTOGRAM ;
-
-RUN; QUIT;
-ODS GRAPHICS OFF;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-%SYMDEL GroupingPrompt;
-
-
-/*   START OF NODE: Summary Statistics   */
-%LET _CLIENTTASKLABEL='Summary Statistics';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-DATA _NULL_;
-CALL SYMPUT("GroupingPrompt",'SEX');
-RUN;
-
-GOPTIONS ACCESSIBLE;
-/* -------------------------------------------------------------------
-   Code generated by SAS Task
-
-   Generated on: Thursday, January 15, 2015 at 2:16:52 PM
-   By task: Summary Statistics
-
-   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   Server:  Local
-   ------------------------------------------------------------------- */
-
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-/* -------------------------------------------------------------------
-   Sort data set WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000
-   ------------------------------------------------------------------- */
-PROC SORT
-	DATA=WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000(FIRSTOBS=1  KEEP=AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS "&GroupingPrompt"n)
-	OUT=WORK.SORTTempTableSorted
-	;
-	BY "&GroupingPrompt"n;
-RUN;
-/* -------------------------------------------------------------------
-   Run the Means Procedure
-   ------------------------------------------------------------------- */
-TITLE;
-TITLE1 "Summary Statistics";
-TITLE2 "Results by &GroupingPrompt";
-FOOTNOTE;
-FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC MEANS DATA=WORK.SORTTempTableSorted
-	FW=12
-	PRINTALLTYPES
-	CHARTYPE
-	NOLABELS
-	QMETHOD=OS
-	VARDEF=DF 	
-		MEAN 
-		STD 
-		MIN 
-		MAX 
-		MODE 
-		N 
-		NMISS	
-		Q1 
-		MEDIAN 
-		Q3	;
-	VAR AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS;
-	BY "&GroupingPrompt"n;
-
-RUN;
-ODS GRAPHICS ON;
-TITLE;
-/*-----------------------------------------------------
- * Use PROC UNIVARIATE to generate the histograms.
- */
-
-TITLE;
-TITLE1 "Summary Statistics";
-TITLE2 "Histograms by &GroupingPrompt";
-PROC UNIVARIATE DATA=WORK.SORTTempTableSorted	NOPRINT	;
-	VAR AGGREGATE_HEALTH_SCORE AGGREGATE_PERCEIVED_HEALTH NUMBER_ER_VISITS CATEGORICAL_ER_VISITS;
-
-		BY "&GroupingPrompt"n;
-	HISTOGRAM ;
-
-RUN; QUIT;
-ODS GRAPHICS OFF;
-/* -------------------------------------------------------------------
-   End of task code.
-   ------------------------------------------------------------------- */
-RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORTTempTableSorted);
-TITLE; FOOTNOTE;
-
-
-GOPTIONS NOACCESSIBLE;
-%LET _CLIENTTASKLABEL=;
-%LET _CLIENTPROJECTPATH=;
-%LET _CLIENTPROJECTNAME=;
-%SYMDEL GroupingPrompt;
-
-
-/*   START OF NODE: Filter by Health   */
-%LET _CLIENTTASKLABEL='Filter by Health';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-%LET CategoricalHealthPrompt_min = 1;
-%LET CategoricalHealthPrompt_max = 5;
-
-GOPTIONS ACCESSIBLE;
-%_eg_conditional_dropds(WORK.QUERY_FOR_MEPS_FULLYR_ER_ME);
-
-PROC SQL;
-   CREATE TABLE WORK.QUERY_FOR_MEPS_FULLYR_ER_ME AS 
+   CREATE TABLE WORK.QUERY_FOR_MEPS_FULLYR_ER_MERGED_ AS 
    SELECT t1.DUPERSID, 
           t1.NUMBER_ER_VISITS, 
           t1.CATEGORICAL_ER_VISITS, 
@@ -2838,8 +2791,8 @@ PROC SQL;
           t1.MRI_RECODED, 
           t1.CATEGORICAL_MARITAL_STATUS, 
           t1.CATEGORICAL_AGE
-      FROM WORK.QUERY_FOR_MEPS_FULLYR_ER_ME_0000 t1
-      WHERE %_eg_WhereParam( t1.CATEGORICAL_AGGREGATE_HEALTH, CategoricalHealthPrompt, BETWEEN, TYPE=N, IS_EXPLICIT=0 );
+      FROM EC100093.meps_fullyr_er_merged_final_3 t1
+      WHERE t1.BMINDX53 BETWEEN 0 AND 85;
 QUIT;
 
 GOPTIONS NOACCESSIBLE;
@@ -2848,52 +2801,329 @@ GOPTIONS NOACCESSIBLE;
 %LET _CLIENTTASKLABEL=;
 %LET _CLIENTPROJECTPATH=;
 %LET _CLIENTPROJECTNAME=;
-%SYMDEL CategoricalHealthPrompt_max;
-%SYMDEL CategoricalHealthPrompt_min;
 
 
-/*   START OF NODE: One-Way Frequencies8   */
-%LET _CLIENTTASKLABEL='One-Way Frequencies8';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
+/*   START OF NODE: Scatter Plot for AGE12X and BMINDX53 (Filtered)   */
+%LET _CLIENTTASKLABEL='Scatter Plot for AGE12X and BMINDX53 (Filtered)';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
 
 GOPTIONS ACCESSIBLE;
 /* -------------------------------------------------------------------
    Code generated by SAS Task
 
-   Generated on: Thursday, January 15, 2015 at 2:16:52 PM
-   By task: One-Way Frequencies8
+   Generated on: Friday, January 16, 2015 at 3:16:33 PM
+   By task: Scatter Plot for AGE12X and BMINDX53 (Filtered)
 
-   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME
+   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_MERGED_
    Server:  Local
    ------------------------------------------------------------------- */
 
-%_eg_conditional_dropds(WORK.SORT);
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
 /* -------------------------------------------------------------------
-   Sort data set Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_ME
+   Sort data set Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_MERGED_
    ------------------------------------------------------------------- */
 
 PROC SQL;
-	CREATE VIEW WORK.SORT AS
-		SELECT T.CATEGORICAL_AGGREGATE_HEALTH
-	FROM WORK.QUERY_FOR_MEPS_FULLYR_ER_ME as T
+	CREATE VIEW WORK.SORTTempTableSorted AS
+		SELECT T.AGE12X, T.BMINDX53
+	FROM WORK.QUERY_FOR_MEPS_FULLYR_ER_MERGED_(FIRSTOBS=1 ) as T
 ;
 QUIT;
+	SYMBOL1
+	INTERPOL=NONE
+	HEIGHT=10pt
+	VALUE=CIRCLE
+	LINE=1
+	WIDTH=2
 
+	CV = _STYLE_
+;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR=NONE
+	LABEL=(   "Body Mass Index")
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	MINOR=NONE
+	LABEL=(   "Age")
+
+
+;
 TITLE;
-TITLE1 "One-Way Frequencies for CATEGORICAL_AGGREGATE_HEALTH";
+TITLE1 "Scatter Plot for AGE12X and BMINDX53 (Filtered)";
 FOOTNOTE;
 FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
-PROC FREQ DATA=WORK.SORT
-	ORDER=INTERNAL
+PROC GPLOT DATA=WORK.SORTTempTableSorted
 ;
-	TABLES CATEGORICAL_AGGREGATE_HEALTH / MISSPRINT  SCORES=TABLE;
-RUN;
+PLOT BMINDX53 * AGE12X / 
+	VAXIS=AXIS1
+
+	HAXIS=AXIS2
+
+FRAME ;
 /* -------------------------------------------------------------------
    End of task code.
    ------------------------------------------------------------------- */
 RUN; QUIT;
-%_eg_conditional_dropds(WORK.SORT);
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+GOPTIONS RESET = SYMBOL;
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Scatter Plot grouped by SEX   */
+%LET _CLIENTTASKLABEL='Scatter Plot grouped by SEX';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+DATA _NULL_;
+CALL SYMPUT("GroupingPrompt",'REGION12');
+RUN;
+
+GOPTIONS ACCESSIBLE;
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:33 PM
+   By task: Scatter Plot grouped by SEX
+
+   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_MERGED_
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set WORK.QUERY_FOR_MEPS_FULLYR_ER_MERGED_
+   ------------------------------------------------------------------- */
+PROC SORT
+	DATA=WORK.QUERY_FOR_MEPS_FULLYR_ER_MERGED_(FIRSTOBS=1  KEEP=AGE12X BMINDX53 "&GroupingPrompt"n)
+	OUT=WORK.SORTTempTableSorted
+	;
+	BY "&GroupingPrompt"n;
+RUN;
+	SYMBOL1
+	INTERPOL=NONE
+	HEIGHT=10pt
+	VALUE=CIRCLE
+	LINE=1
+	WIDTH=2
+
+	CV = _STYLE_
+;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR=NONE
+	LABEL=(   "Body Mass Index")
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	MINOR=NONE
+	LABEL=(   "Age")
+
+
+;
+TITLE;
+TITLE1 "Scatter Plot for AGE12X and BMINDX53 (Filtered) grouped by SEX (1 = Male, 2 = Female)";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GPLOT DATA=WORK.SORTTempTableSorted
+ NOCACHE ;
+PLOT BMINDX53 * AGE12X / 
+	VAXIS=AXIS1
+
+	HAXIS=AXIS2
+
+FRAME ;
+	BY "&GroupingPrompt"n;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+GOPTIONS RESET = SYMBOL;
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+%SYMDEL GroupingPrompt;
+
+
+/*   START OF NODE: Scatter Plot grouped by REGION12   */
+%LET _CLIENTTASKLABEL='Scatter Plot grouped by REGION12';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+DATA _NULL_;
+CALL SYMPUT("GroupingPrompt",'REGION12');
+RUN;
+
+GOPTIONS ACCESSIBLE;
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:33 PM
+   By task: Scatter Plot grouped by REGION12
+
+   Input Data: Local:WORK.QUERY_FOR_MEPS_FULLYR_ER_MERGED_
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set WORK.QUERY_FOR_MEPS_FULLYR_ER_MERGED_
+   ------------------------------------------------------------------- */
+PROC SORT
+	DATA=WORK.QUERY_FOR_MEPS_FULLYR_ER_MERGED_(FIRSTOBS=1  KEEP=AGE12X BMINDX53 "&GroupingPrompt"n)
+	OUT=WORK.SORTTempTableSorted
+	;
+	BY "&GroupingPrompt"n;
+RUN;
+	SYMBOL1
+	INTERPOL=NONE
+	HEIGHT=10pt
+	VALUE=CIRCLE
+	LINE=1
+	WIDTH=2
+
+	CV = _STYLE_
+;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR=NONE
+	LABEL=(   "Body Mass Index")
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	MINOR=NONE
+	LABEL=(   "Age")
+
+
+;
+TITLE;
+TITLE1 "Scatter Plot for AGE12X and BMINDX53 (Filtered) grouped by REGION12 (1 = Northeast, 2 = Midwest, 3 = South, 4 = West)";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GPLOT DATA=WORK.SORTTempTableSorted
+ NOCACHE ;
+PLOT BMINDX53 * AGE12X / 
+	VAXIS=AXIS1
+
+	HAXIS=AXIS2
+
+FRAME ;
+	BY "&GroupingPrompt"n;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+GOPTIONS RESET = SYMBOL;
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+%SYMDEL GroupingPrompt;
+
+
+/*   START OF NODE: Multivariate Region, Sex, MRI   */
+%LET _CLIENTTASKLABEL='Multivariate Region, Sex, MRI';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:33 PM
+   By task: Multivariate Region, Sex, MRI
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set ECLIB000.meps_fullyr_er_merged_final_3
+   ------------------------------------------------------------------- */
+PROC SORT
+	DATA=ECLIB000.meps_fullyr_er_merged_final_3(KEEP=MRI_RECODED REGION12 SEX)
+	OUT=WORK.SORTTempTableSorted
+	;
+	BY SEX;
+RUN;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive MRI, 1 = received MRI" )
+
+
+;
+Axis3
+
+	LABEL=( "1 = Northeast, 2 = Midwest, 3 = South, 4 = West" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for MRI_RECODED grouped by REGION12 and SEX (1 = Male, 2 = Female)";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR3D 
+	 MRI_RECODED
+ /
+	GROUP=REGION12
+	SHAPE=BLOCK
+FRAME	DISCRETE
+	TYPE=PCT
+PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+	BY SEX;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
 TITLE; FOOTNOTE;
 
 
@@ -2903,393 +3133,796 @@ GOPTIONS NOACCESSIBLE;
 %LET _CLIENTPROJECTNAME=;
 
 
-/*   START OF NODE: Program   */
-%LET _CLIENTTASKLABEL='Program';
-%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011515.egp';
-%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011515.egp';
-%LET _SASPROGRAMFILE=;
-%LET AgePrompt_min = 18;
-%LET AgePrompt_max = 75;
-DATA _NULL_;
-CALL SYMPUT("GroupingPrompt",'SEX');
-RUN;
+/*   START OF NODE: Multivariate Race, Sex, MRI   */
+%LET _CLIENTTASKLABEL='Multivariate Race, Sex, MRI';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
 
 GOPTIONS ACCESSIBLE;
-*Program written by Sean Mihaljevich 01/15/15
-*The purpose of this program is to create one-way-frequency tables for MRI and X-ray variables that are made flexible
-by incorporating age and grouping prompts;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
 
-*Assignt project library;
-LIBNAME SEAN BASE "P:\QAC\qac200\students\smihaljevich\Assignments";
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
 
-*Create a working data set containing all of the variables in work.query_for_meps_fullyr_er_me_0000;
-*Data is called in from the working data set work.query_for_meps_fullyr_er_me_0000.  The initial branch
-of this project (the one stemming from Assignt Project Library) must be run for this data set to exist
-and for the program to work properly.  This data set may also have already been fliterd for a certain age range, as it
-follows the Filter by Age query;
-data subset_program_using_prompts;
-set work.query_for_meps_fullyr_er_me_0000;
+   Generated on: Friday, January 16, 2015 at 3:16:34 PM
+   By task: Multivariate Race, Sex, MRI
 
-keep  DUPERSID 
-          NUMBER_ER_VISITS 
-          CATEGORICAL_ER_VISITS 
-          COUNT_of_DUPERSID 
-          INFULLYR 
-          DUPERSID1 
-          AGE12X 
-          SEX 
-          REGION12 
-          RACETHX 
-          MARRY12X 
-          EDUCYR 
-          EDUYRDEG 
-          EMPST31 
-          EMPST42 
-          EMPST53 
-          SAQELIG 
-          ADPRX42 
-          EDRECODE 
-          ADILCR42 
-          EDRECODE_RECODED 
-          ADILWW42 
-          ADRTCR42 
-          ADRTWW42 
-          ADAPPT42 
-          ADNDCR42 
-          ADEGMC42 
-          ADLIST42 
-          ADEXPL42 
-          ADRESP42 
-          ADPRTM42 
-          ADINST42 
-          ADEZUN42 
-          ADTLHW42 
-          ADFFRM42 
-          ADFHLP42 
-          ADHECR42 
-          ADSMOK42 
-          ADNSMK42 
-          ADDRBP42 
-          ADSPEC42 
-          ADSPRF42 
-          ADGENH42 
-          ADDAYA42 
-          ADCLIM42 
-          ADPALS42 
-          ADPWLM42 
-          ADMALS42 
-          ADMWLM42 
-          ADPAIN42 
-          ADCAPE42 
-          ADNRGY42 
-          ADDOWN42 
-          ADSOCA42 
-          PCS42 
-          MCS42 
-          SFFLAG42 
-          ADNERV42 
-          ADHOPE42 
-          ADREST42 
-          ADSAD42 
-          ADEFRT42 
-          ADWRTH42 
-          K6SUM42 
-          ADINTR42 
-          ADDPRS42 
-          PHQ242 
-          ADINSA42 
-          ADINSB42 
-          ADRISK42 
-          ADOVER42 
-          ADCMPM42 
-          ADCMPD42 
-          ADCMPY42 
-          ADLANG42 
-          SAQWT12F 
-          FAMS1231 
-          PROXY12 
-          INTVLANG 
-          ELGRND12 
-          RTHLTH31 
-          RTHLTH42 
-          RTHLTH53 
-          MNHLTH31 
-          MNHLTH42 
-          MNHLTH53 
-          HIBPDX 
-          CHDDX 
-          ANGIDX 
-          MIDX 
-          OHRTDX 
-          STRKDX 
-          EMPHDX 
-          CHOLDX 
-          CANCERDX 
-          DIABDX 
-          ARTHDX 
-          ASTHDX 
-          PREGNT31 
-          PREGNT42 
-          PREGNT53 
-          BMINDX53 
-          LANGHM42 
-          ENGCMF42 
-          ENGSPK42 
-          USBORN42 
-          USLIVE42 
-          HAVEUS42 
-          YNOUSC42 
-          PROVTY42 
-          PLCTYP42 
-          TYPEPE42 
-          LANGPR42 
-          MDUNAB42 
-          DPOTSD12 
-          TTLP12X 
-          FAMINC12 
-          POVCAT12 
-          POVLEV12 
-          UNINS12 
-          INSCOV12 
-          INSURC12 
-          TRIST12X 
-          TRIPR12X 
-          TRIEX12X 
-          TRILI12X 
-          TRICH12X 
-          MCRPD12 
-          MCRPD12X 
-          MCRPB12 
-          MCRPHO12 
-          MCDHMO12 
-          MCDMC12 
-          PRVHMO12 
-          PRVMNC12 
-          PRVDRL12 
-          PHMONP12 
-          PMNCNP12 
-          PRDRNP12 
-          TRICR12X 
-          TRIAT12X 
-          MCAID12 
-          MCAID12X 
-          MCARE12 
-          MCARE12X 
-          MCDAT12X 
-          OTPAAT12 
-          OTPBAT12 
-          OTPUBA12 
-          OTPUBB12 
-          PRIDK12 
-          PRIEU12 
-          PRING12 
-          PRIOG12 
-          PRIS12 
-          PRIV12 
-          PRIVAT12 
-          PROUT12 
-          PUB12X 
-          PUBAT12X 
-          INS12X 
-          INSAT12X 
-          STAPR12 
-          STPRAT12 
-          DNTINS12 
-          PMDINS12 
-          PMEDUP31 
-          PMEDUP42 
-          PMEDUP53 
-          PMEDPY31 
-          PMEDPY42 
-          PMEDPY53 
-          PMEDPP31 
-          PMEDPP42 
-          PMEDPP53 
-          TOTTCH12 
-          TOTEXP12 
-          TOTSLF12 
-          TOTMCR12 
-          TOTMCD12 
-          TOTPRV12 
-          TOTVA12 
-          TOTTRI12 
-          TOTOFD12 
-          TOTSTL12 
-          TOTWCP12 
-          TOTOPR12 
-          TOTOPU12 
-          TOTOSR12 
-          TOTPTR12 
-          TOTOTH12 
-          ERTOT12 
-          IPZERO12 
-          IPDIS12 
-          IPNGTD12 
-          RXTOT12 
-          PERWT12F 
-          HEALTH_GENERAL 
-          HEALTH_LIMITS_ACTIVITY 
-          HEALTH_LIMITS_STAIRS 
-          ACCOMPLISH_PHYSICAL_PROBLEMS 
-          WORK_LIMIT_PHYSICAL_PROBLEMS 
-          ACCOMPLISH_MENTAL_PROBLEMS 
-          WORK_LIMIT_MENTAL_PROBLEMS 
-          PAIN_LIMIT_WORK 
-          CALM 
-          ENERGY 
-          DEPRESSED 
-          HEALTH_SOCIAL 
-          EDUCYR_RECODED 
-          EDUYRDEG_RECODED 
-          MARITAL_STATUS 
-          EMPLOY_STATUS_31 
-          EMPLOY_STATUS_42 
-          EMPLOY_STATUS_53 
-          NOT_NEED_H_INSURANCE 
-          HEALTH_WORTH_COST 
-          LIKELY_RISK 
-          ILLS_NO_HELP 
-          SAQINTERVIEW_LANG 
-          SPEC_REFERRAL 
-          SEE_SPECIALIST 
-          CHECK_BLOOD_PRESSURE 
-          SMOKE 
-          RATE_HEALTH_CARE 
-          PERC_HEALTH_31 
-          PERC_HEALTH_42 
-          PERC_HEALTH_53 
-          BMINDX_RECODED 
-          ENGSPK_RECODED 
-          PLCTYP_RECODED 
-          TYPEPE_RECODED 
-          PROVIDER_TYPE 
-          HAVE_USC 
-          WHY_NO_USC 
-          HEALTH_GENERAL_REVERSED 
-          PAIN_LIMIT_WORK_REVERSED 
-          CALM_REVERSED 
-          ENERGY_REVERSED 
-          PERC_HEALTH_31_REVERSED 
-          PERC_HEALTH_42_REVERSED 
-          PERC_HEALTH_53_REVERSED 
-          AGGREGATE_HEALTH_SCORE 
-          AGGREGATE_PERCEIVED_HEALTH 
-          CATEGORICAL_AGGREGATE_HEALTH 
-          CATEGORICAL_MARITAL_STATUS 
-          CATEGORICAL_EDUCATION 
-          CATEGORICAL_PERCEIVED_HEALTH 
-          INER 
-          DUID 
-          PID 
-          DUPERSID11 
-          EVNTIDX 
-          EVENTRN 
-          ERHEVIDX 
-          FFEEIDX 
-          PANEL 
-          MPCDATA 
-          ERDATEYR 
-          ERDATEMM 
-          ERDATEDD 
-          SEEDOC 
-          VSTCTGRY 
-          VSTRELCN 
-          LABTEST 
-          SONOGRAM 
-          XRAYS 
-          MAMMOG 
-          MRI 
-          EKG 
-          EEG 
-          RCVVAC 
-          ANESTH 
-          THRTSWAB 
-          OTHSVCE 
-          SURGPROC 
-          MEDPRESC 
-          ERICD1X 
-          ERICD2X 
-          ERICD3X 
-          ERPRO1X 
-          ERCCC1X 
-          ERCCC2X 
-          ERCCC3X 
-          FFERTYPE 
-          FFBEF12 
-          ERXP12X 
-          ERTC12X 
-          ERFSF12X 
-          ERFMR12X 
-          ERFMD12X 
-          ERFPV12X 
-          ERFVA12X 
-          ERFTR12X 
-          ERFOF12X 
-          ERFSL12X 
-          ERFWC12X 
-          ERFOR12X 
-          ERFOU12X 
-          ERFOT12X 
-          ERFXP12X 
-          ERFTC12X 
-          ERDSF12X 
-          ERDMR12X 
-          ERDMD12X 
-          ERDPV12X 
-          ERDVA12X 
-          ERDTR12X 
-          ERDOF12X 
-          ERDSL12X 
-          ERDWC12X 
-          ERDOR12X 
-          ERDOU12X 
-          ERDOT12X 
-          ERDXP12X 
-          ERDTC12X 
-          IMPFLAG 
-          PERWT12F1 
-          VARSTR 
-          VARPSU 
-          XRAY_RECODED 
-          MRI_RECODED
-		CATEGORICAL_AGE;
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
 
-*Sort by the prompt GroupingPrompt.  This is necessary to create grouped frequency tables;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set ECLIB000.meps_fullyr_er_merged_final_3
+   ------------------------------------------------------------------- */
 PROC SORT
-	DATA=subset_program_using_prompts;
-	BY &GroupingPrompt;
+	DATA=ECLIB000.meps_fullyr_er_merged_final_3(KEEP=MRI_RECODED RACETHX SEX)
+	OUT=WORK.SORTTempTableSorted
+	;
+	BY SEX;
 RUN;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
 
-*Create one-way-frequency tables for XRAY_RECODED and MRI_RECODED.  The frequency tables are filtered by age using
- the AgePrompt, which allows one to select a range of ages between 18 and 75.  They are also grouped using GroupingPrompt, 
-which allows the user to group observations by the variable CATEGORICAL_AGE, AGE12X, SEX, REGION12, RACETHX, 
-CATEGORICAL_MARITAL_STATUS, or CATEGORICAL_EDUCATION.  When the program runs the user is asked to specify the 
-desired age range and grouping variable.;
-proc freq
-data=subset_program_using_prompts
-ORDER =internal;
-WHERE AGE12X >= &AgePrompt_min and age12x<=&AgePrompt_max;
-TITLE "One-Way-Frequencies for X-rays and MRIs for ages &AgePrompt_min to &AgePrompt_max grouped by &GroupingPrompt";
-Table XRAY_RECODED /
-	MISSPRINT
-	Scores=TABLE;
-Table MRI_RECODED /
-	MISSPRINT
-	Scores=TABLE;
-By &GroupingPrompt;
-run;
 
-quit;
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive MRI, 1 = received MRI" )
+
+
+;
+Axis3
+
+	LABEL=( "Race" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for MRI_RECODED grouped by RACETHX and SEX (1 = Male, 2 = Female)";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR3D 
+	 MRI_RECODED
+ /
+	GROUP=RACETHX
+	SHAPE=BLOCK
+FRAME	DISCRETE
+	TYPE=PCT
+PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+	BY SEX;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
 
 
 GOPTIONS NOACCESSIBLE;
 %LET _CLIENTTASKLABEL=;
 %LET _CLIENTPROJECTPATH=;
 %LET _CLIENTPROJECTNAME=;
-%LET _SASPROGRAMFILE=;
-%SYMDEL AgePrompt_min;
-%SYMDEL AgePrompt_max;
-%SYMDEL GroupingPrompt;
+
+
+/*   START OF NODE: Multivariate Marital, Sex, MRI   */
+%LET _CLIENTTASKLABEL='Multivariate Marital, Sex, MRI';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:36 PM
+   By task: Multivariate Marital, Sex, MRI
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set ECLIB000.meps_fullyr_er_merged_final_3
+   ------------------------------------------------------------------- */
+PROC SORT
+	DATA=ECLIB000.meps_fullyr_er_merged_final_3(KEEP=MRI_RECODED CATEGORICAL_MARITAL_STATUS SEX)
+	OUT=WORK.SORTTempTableSorted
+	;
+	BY SEX;
+RUN;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive MRI, 1 = received MRI" )
+
+
+;
+Axis3
+
+	LABEL=( "0 = not married, 1 = married" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for MRI_RECODED grouped by CATEGORICAL_MARITAL_STATUS and SEX (1 = Male, 2 = Female)";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR3D 
+	 MRI_RECODED
+ /
+	GROUP=CATEGORICAL_MARITAL_STATUS
+	SHAPE=BLOCK
+FRAME	DISCRETE
+	TYPE=PCT
+PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+	BY SEX;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Multivariate Education, Sex, MRI   */
+%LET _CLIENTTASKLABEL='Multivariate Education, Sex, MRI';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:37 PM
+   By task: Multivariate Education, Sex, MRI
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set ECLIB000.meps_fullyr_er_merged_final_3
+   ------------------------------------------------------------------- */
+PROC SORT
+	DATA=ECLIB000.meps_fullyr_er_merged_final_3(KEEP=MRI_RECODED CATEGORICAL_EDUCATION SEX)
+	OUT=WORK.SORTTempTableSorted
+	;
+	BY SEX;
+RUN;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive MRI, 1 = received MRI" )
+
+
+;
+Axis3
+
+	LABEL=( "Education Level" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for MRI_RECODED grouped by CATEGORICAL_EDUCATION and SEX (1 = Male, 2 = Female)";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR3D 
+	 MRI_RECODED
+ /
+	GROUP=CATEGORICAL_EDUCATION
+	SHAPE=BLOCK
+FRAME	DISCRETE
+	TYPE=PCT
+PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+	BY SEX;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Multivariate Age, Sex, MRI   */
+%LET _CLIENTTASKLABEL='Multivariate Age, Sex, MRI';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:38 PM
+   By task: Multivariate Age, Sex, MRI
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set ECLIB000.meps_fullyr_er_merged_final_3
+   ------------------------------------------------------------------- */
+PROC SORT
+	DATA=ECLIB000.meps_fullyr_er_merged_final_3(KEEP=MRI_RECODED CATEGORICAL_AGE SEX)
+	OUT=WORK.SORTTempTableSorted
+	;
+	BY SEX;
+RUN;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive MRI, 1 = received MRI" )
+
+
+;
+Axis3
+
+	LABEL=( "Age Category" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for MRI_RECODED grouped by CATEGORICAL_AGE and SEX (1 = Male, 2 = Female)";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR3D 
+	 MRI_RECODED
+ /
+	GROUP=CATEGORICAL_AGE
+	SHAPE=BLOCK
+FRAME	DISCRETE
+	TYPE=PCT
+PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+	BY SEX;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Multivariate Region, Sex, X-ray   */
+%LET _CLIENTTASKLABEL='Multivariate Region, Sex, X-ray';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:39 PM
+   By task: Multivariate Region, Sex, X-ray
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set ECLIB000.meps_fullyr_er_merged_final_3
+   ------------------------------------------------------------------- */
+PROC SORT
+	DATA=ECLIB000.meps_fullyr_er_merged_final_3(KEEP=XRAY_RECODED REGION12 SEX)
+	OUT=WORK.SORTTempTableSorted
+	;
+	BY SEX;
+RUN;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive X-ray, 1 = received X-ray" )
+
+
+;
+Axis3
+
+	LABEL=( "1 = Northeast, 2 = Midwest, 3 = South, 4 = West" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for XRAY_RECODED grouped by REGION12 and SEX (1 = Male, 2 = Female)";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR3D 
+	 XRAY_RECODED
+ /
+	GROUP=REGION12
+	SHAPE=BLOCK
+FRAME	DISCRETE
+	TYPE=PCT
+PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+	BY SEX;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Multivariate Race, Sex, X-ray   */
+%LET _CLIENTTASKLABEL='Multivariate Race, Sex, X-ray';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:40 PM
+   By task: Multivariate Race, Sex, X-ray
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set ECLIB000.meps_fullyr_er_merged_final_3
+   ------------------------------------------------------------------- */
+PROC SORT
+	DATA=ECLIB000.meps_fullyr_er_merged_final_3(KEEP=XRAY_RECODED RACETHX SEX)
+	OUT=WORK.SORTTempTableSorted
+	;
+	BY SEX;
+RUN;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive X-ray, 1 = received X-ray" )
+
+
+;
+Axis3
+
+	LABEL=( "Race" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for XRAY_RECODED grouped by RACETHX and SEX (1 = Male, 2 = Female)";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR3D 
+	 XRAY_RECODED
+ /
+	GROUP=RACETHX
+	SHAPE=BLOCK
+FRAME	DISCRETE
+	TYPE=PCT
+PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+	BY SEX;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Multivariate Marital, Sex, X-ray   */
+%LET _CLIENTTASKLABEL='Multivariate Marital, Sex, X-ray';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:41 PM
+   By task: Multivariate Marital, Sex, X-ray
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set ECLIB000.meps_fullyr_er_merged_final_3
+   ------------------------------------------------------------------- */
+PROC SORT
+	DATA=ECLIB000.meps_fullyr_er_merged_final_3(KEEP=XRAY_RECODED CATEGORICAL_MARITAL_STATUS SEX)
+	OUT=WORK.SORTTempTableSorted
+	;
+	BY SEX;
+RUN;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive X-ray, 1 = received X-ray" )
+
+
+;
+Axis3
+
+	LABEL=( "0 = not married, 1 = married" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for XRAY_RECODED grouped by CATEGORICAL_MARITAL_STATUS and SEX (1 = Male, 2 = Female)";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR3D 
+	 XRAY_RECODED
+ /
+	GROUP=CATEGORICAL_MARITAL_STATUS
+	SHAPE=BLOCK
+FRAME	DISCRETE
+	TYPE=PCT
+PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+	BY SEX;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Multivariate Education, Sex, X-ray   */
+%LET _CLIENTTASKLABEL='Multivariate Education, Sex, X-ray';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:42 PM
+   By task: Multivariate Education, Sex, X-ray
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set ECLIB000.meps_fullyr_er_merged_final_3
+   ------------------------------------------------------------------- */
+PROC SORT
+	DATA=ECLIB000.meps_fullyr_er_merged_final_3(KEEP=XRAY_RECODED CATEGORICAL_EDUCATION SEX)
+	OUT=WORK.SORTTempTableSorted
+	;
+	BY SEX;
+RUN;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive X-ray, 1 = received X-ray" )
+
+
+;
+Axis3
+
+	LABEL=( "Education Level" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for XRAY_RECODED grouped by CATEGORICAL_EDUCATION and SEX (1 = Male, 2 = Female)";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR3D 
+	 XRAY_RECODED
+ /
+	GROUP=CATEGORICAL_EDUCATION
+	SHAPE=BLOCK
+FRAME	DISCRETE
+	TYPE=PCT
+PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+	BY SEX;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
+
+
+/*   START OF NODE: Multivariate Age, Sex, X-ray   */
+%LET _CLIENTTASKLABEL='Multivariate Age, Sex, X-ray';
+%LET _CLIENTPROJECTPATH='P:\QAC\qac200\students\smihaljevich\Assignments\mihaljevichs_SAS_project_011615.egp';
+%LET _CLIENTPROJECTNAME='mihaljevichs_SAS_project_011615.egp';
+
+GOPTIONS ACCESSIBLE;
+LIBNAME ECLIB000 "P:\QAC\qac200\students\smihaljevich\Assignments";
+
+/* -------------------------------------------------------------------
+   Code generated by SAS Task
+
+   Generated on: Friday, January 16, 2015 at 3:16:44 PM
+   By task: Multivariate Age, Sex, X-ray
+
+   Input Data: P:\QAC\qac200\students\smihaljevich\Assignments\meps_fullyr_er_merged_final_3.sas7bdat
+   Server:  Local
+   ------------------------------------------------------------------- */
+
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+/* -------------------------------------------------------------------
+   Sort data set ECLIB000.meps_fullyr_er_merged_final_3
+   ------------------------------------------------------------------- */
+PROC SORT
+	DATA=ECLIB000.meps_fullyr_er_merged_final_3(KEEP=XRAY_RECODED CATEGORICAL_AGE SEX)
+	OUT=WORK.SORTTempTableSorted
+	;
+	BY SEX;
+RUN;
+Axis1
+	STYLE=1
+	WIDTH=1
+	MINOR= 
+	(NUMBER=1
+	)
+	LABEL=( "Percentage Share of Observations" )
+
+
+;
+Axis2
+	STYLE=1
+	WIDTH=1
+	LABEL=( "0 = did not receive X-ray, 1 = received X-ray" )
+
+
+;
+Axis3
+
+	LABEL=( "Age Category" )
+
+
+
+;
+TITLE;
+TITLE1 "Bar Chart for XRAY_RECODED grouped by CATEGORICAL_AGE and SEX (1 = Male, 2 = Female)";
+FOOTNOTE;
+FOOTNOTE1 "Generated by the SAS System (&_SASSERVERNAME, &SYSSCPL) on %TRIM(%QSYSFUNC(DATE(), NLDATE20.)) at %TRIM(%SYSFUNC(TIME(), TIMEAMPM12.))";
+PROC GCHART DATA=WORK.SORTTempTableSorted
+;
+	VBAR3D 
+	 XRAY_RECODED
+ /
+	GROUP=CATEGORICAL_AGE
+	SHAPE=BLOCK
+FRAME	DISCRETE
+	TYPE=PCT
+PCT
+	LEGEND=LEGEND1
+	COUTLINE=BLACK
+	RAXIS=AXIS1
+	MAXIS=AXIS2
+	GAXIS=AXIS3
+PATTERNID=MIDPOINT
+;
+	BY SEX;
+/* -------------------------------------------------------------------
+   End of task code.
+   ------------------------------------------------------------------- */
+RUN; QUIT;
+%_eg_conditional_dropds(WORK.SORTTempTableSorted);
+TITLE; FOOTNOTE;
+
+
+GOPTIONS NOACCESSIBLE;
+%LET _CLIENTTASKLABEL=;
+%LET _CLIENTPROJECTPATH=;
+%LET _CLIENTPROJECTNAME=;
 
 ;*';*";*/;quit;run;
 ODS _ALL_ CLOSE;
